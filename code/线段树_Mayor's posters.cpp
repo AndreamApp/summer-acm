@@ -10,11 +10,12 @@
 
 using namespace std;
 
-const int MAX = 20005;
+const int MAX = 100005;
 
 int n;
 int ll[MAX];
 int rr[MAX];
+int discreteArr[MAX<<2];
 
 set<int> a;
 map<int, int> fix;
@@ -45,7 +46,7 @@ struct node{
 		return l == a && r == b;
 	}
 };
-node tree[MAX*10+1];
+node tree[MAX*15+1];
 
 void sync(int v){
 	if(!tree[v].single() && tree[v].cover){
@@ -117,6 +118,43 @@ bool query(int v, int l, int r){
 	return res;
 } 
 
+int input(){
+	int disN = 1;
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d%d", &ll[i], &rr[i]);
+		discreteArr[disN++] = ll[i];
+		discreteArr[disN++] = rr[i];
+	}
+	sort(discreteArr+1, discreteArr+disN);
+
+	int j = 2;
+	for (int i = 2; i < disN; i++)
+	{
+		if (discreteArr[i] != discreteArr[i-1]) 
+			discreteArr[j++] = discreteArr[i];
+	}
+	for (int i = j-1; i > 1; i--)
+	{
+		if (discreteArr[i] != discreteArr[i-1] + 1)
+			discreteArr[j++] = discreteArr[i-1] + 1;
+	}
+	sort(discreteArr + 1, discreteArr + j);
+	return j;
+}
+
+int biSearch(int arr[], int key, int n)
+{
+	int l = 1, r = n-1, m = -1;
+	while (l <= r)
+	{
+		m = l + ((r-l)>>1);
+		if (arr[m] < key) l = m+1;
+		else if (key < arr[m]) r = m-1;
+		else break;
+	}
+	return m;
+}
 
 // 线段树（区间树）就是把对n个数的操作转化为对logn个区间的操作。比如区间查询、区间更新 
 int main(){
@@ -125,31 +163,31 @@ int main(){
 	scanf("%d", &t);
 	while(t--){
 		scanf("%d", &n);
-		for(int i = 0; i < n; i++){
-			scanf("%d%d", &ll[i], &rr[i]);
-			a.insert(ll[i]);
-			a.insert(rr[i]); 
-		}
-		
-		int i = 0;
-		int last = 0;
-		for(set<int>::iterator it = a.begin(); it != a.end(); it++){
-			if(*it-last>1) i++; // fill gap with blank
-//			printf("map: %d -> %d\n", *it, i);
-			fix[*it] = i++;
-			last = *it;
-		}
+//		for(int i = 0; i < n; i++){
+//			scanf("%d%d", &ll[i], &rr[i]);
+//			a.insert(ll[i]);
+//			a.insert(rr[i]); 
+//		}
+//		
+//		int i = 0;
+//		for(set<int>::iterator it = a.begin(); it != a.end(); it++){
+//			fix[*it] = i;
+//			i++;
+//		}
 //		printf("n=%d\n", a.size());
-		build(0, 0, a.size()+10);
+		int j = input();
+		build(0, 0, j + 100);
 		
 		int res = 0, l, r;
 		for(int i = n-1; i >= 0; i--){
-			l = fix[ll[i]];
-			r = fix[rr[i]];
-			bool cover = query(0, l, r);
+//			l = fix[ll[i]];
+//			r = fix[rr[i]];
+			int ql = biSearch(discreteArr, ll[i], j);
+			int qr = biSearch(discreteArr, rr[i], j);
+			bool cover = query(0, ql, qr);
 //			printf("[%d, %d] cover=%d\n", l, r, cover);
 			if(!cover){
-				insert(0, l, r);
+				insert(0, ql, qr);
 				res++;
 			}
 		}
