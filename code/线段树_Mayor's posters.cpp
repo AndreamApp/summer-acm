@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <set>
 
 /*
 使用线段树模拟贴海报的过程，贴海报=区间更新，查询某个区间有没有海报=区间查询 
@@ -10,24 +9,11 @@
 
 using namespace std;
 
-const int MAX = 100005;
+const int MAX = 10005;
 
 int n;
 int ll[MAX];
 int rr[MAX];
-int discreteArr[MAX<<2];
-
-set<int> a;
-map<int, int> fix;
-// + 优先级高于 <<
-// l << 1 + 1 其实是 l << (1 + 1)，是错的 
-inline int L(int l){
-	return (l << 1) + 1;
-}
-
-inline int R(int r){
-	return (r << 1) + 2;
-}
 
 struct node{
 	int l;
@@ -46,13 +32,28 @@ struct node{
 		return l == a && r == b;
 	}
 };
-node tree[MAX*15+1];
+node tree[1000000];
 
-void sync(int v){
+// + 优先级高于 <<
+// l << 1 + 1 其实是 l << (1 + 1)，是错的 
+inline int L(int l){
+	return (l << 1) + 1;
+}
+
+inline int R(int r){
+	return (r << 1) + 2;
+}
+
+void down(int v){
 	if(!tree[v].single() && tree[v].cover){
 		tree[L(v)].cover = 1;
 		tree[R(v)].cover = 1;
 	}
+}
+
+void up(int v){
+	if(tree[L(v)].cover && tree[R(v)].cover)
+		tree[v].cover = 1;
 }
 
 // 结点v对应的区间为[l,r] 
@@ -70,7 +71,7 @@ void build(int v, int l, int r){
 // 根节点v开始查找第i个值，将其设为val
 // insert(0, i, val) -> a[i] = val; 
 void insert(int v, int l, int r){
-	if(l == tree[v].l && r == tree[v].r){
+	if(tree[v].is(l, r)){
 		tree[v].cover = 1;
 		return;
 	}
@@ -86,21 +87,23 @@ void insert(int v, int l, int r){
 		insert(L(v), l, mid);
 		insert(R(v), mid+1, r);
 	}
+	// 子区间值的变化可能引起该区间的变化，因此根据子区间的值更新该区间 
+	// 这个更新必须要即时完成，不能延迟到query的时候再做 
+	// 因为这个更新要逐层向上传播。爸爸区间不即时更新，爷爷区间的值就会出错 
+	up(v);
 }
 
 // 状态：(l, r), 0<=l<=r<=n-1 
-// 状态值：(sum, lazy) 
+// 状态值：(cover) 
 // 初始：(tree[v].l, tree[v].r)  终止(l, r), l >= tree[v].l, r <= tree[v].r 
 bool query(int v, int l, int r){
 	// 终止状态 
-	if(l == tree[v].l && r == tree[v].r){
-		sync(v);
+	if(tree[v].is(l, r)){
 		return tree[v].cover;
 	}
 	
-	// 查询的时候再同步lazy 
-	sync(v);
-	
+	// 先用该区间的值更新子区间的值，将区间更新时的lazy值下放 
+	down(v);
 	// 分治查询 
 	int mid = tree[v].mid();
 	bool res;
@@ -114,46 +117,29 @@ bool query(int v, int l, int r){
 		// 用子区间的值更新该区间 
 		res = query(L(v), l, mid) & query(R(v), mid+1, r);
 	}
-	tree[v].cover = tree[L(v)].cover & tree[R(v)].cover;
+	// 子区间值的变化可能引起该区间的变化，因此根据子区间的值更新该区间 
+	up(v);
 	return res;
 } 
 
-int input(){
-	int disN = 1;
-	for (int i = 1; i <= n; i++)
-	{
-		scanf("%d%d", &ll[i], &rr[i]);
-		discreteArr[disN++] = ll[i];
-		discreteArr[disN++] = rr[i];
-	}
-	sort(discreteArr+1, discreteArr+disN);
+// 用于区间离散化 
+set<int> a;
+map<int, int> fix;
 
-	int j = 2;
-	for (int i = 2; i < disN; i++)
-	{
-		if (discreteArr[i] != discreteArr[i-1]) 
-			discreteArr[j++] = discreteArr[i];
+int discretize(){
+	int i = 0;
+	int last = 0;
+	for(set<int>::iterator it = a.begin(); it != a.end(); it++){
+		fix[*it] = i;
+		if(*it - last == 1){
+			i++;
+		}
+		else{
+			i+=2;
+		}
+		last = * it;
 	}
-	for (int i = j-1; i > 1; i--)
-	{
-		if (discreteArr[i] != discreteArr[i-1] + 1)
-			discreteArr[j++] = discreteArr[i-1] + 1;
-	}
-	sort(discreteArr + 1, discreteArr + j);
-	return j;
-}
-
-int biSearch(int arr[], int key, int n)
-{
-	int l = 1, r = n-1, m = -1;
-	while (l <= r)
-	{
-		m = l + ((r-l)>>1);
-		if (arr[m] < key) l = m+1;
-		else if (key < arr[m]) r = m-1;
-		else break;
-	}
-	return m;
+	return i;
 }
 
 // 线段树（区间树）就是把对n个数的操作转化为对logn个区间的操作。比如区间查询、区间更新 
@@ -163,31 +149,24 @@ int main(){
 	scanf("%d", &t);
 	while(t--){
 		scanf("%d", &n);
-//		for(int i = 0; i < n; i++){
-//			scanf("%d%d", &ll[i], &rr[i]);
-//			a.insert(ll[i]);
-//			a.insert(rr[i]); 
-//		}
-//		
-//		int i = 0;
-//		for(set<int>::iterator it = a.begin(); it != a.end(); it++){
-//			fix[*it] = i;
-//			i++;
-//		}
-//		printf("n=%d\n", a.size());
-		int j = input();
-		build(0, 0, j + 100);
+		for(int i = 0; i < n; i++){
+			scanf("%d%d", &ll[i], &rr[i]);
+			a.insert(ll[i]);
+			a.insert(rr[i]); 
+		}
+		
+		// 将区间离散化，把[0,10000000]压缩到[0,40000]，再构建线段树 
+		int i = discretize();
+		build(0, 0, i + 100);
 		
 		int res = 0, l, r;
+		// 倒着贴海报，贴的时候同时查询出[l,r]是否完全被海报覆盖 
 		for(int i = n-1; i >= 0; i--){
-//			l = fix[ll[i]];
-//			r = fix[rr[i]];
-			int ql = biSearch(discreteArr, ll[i], j);
-			int qr = biSearch(discreteArr, rr[i], j);
-			bool cover = query(0, ql, qr);
-//			printf("[%d, %d] cover=%d\n", l, r, cover);
+			l = fix[ll[i]];
+			r = fix[rr[i]];
+			bool cover = query(0, l, r);
 			if(!cover){
-				insert(0, ql, qr);
+				insert(0, l, r);
 				res++;
 			}
 		}
