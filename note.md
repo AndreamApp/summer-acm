@@ -111,14 +111,35 @@
 	迭代加深
 	IDA*
 	Alpha-Beta剪枝
-	
+最小生成树
+	Prim
+	Kruscal
+最短路
+	Dijkstra		单源	不含负权边
+	Bellman-Ford	单源	可含负权边，可判负权环
+	SPFA			单源	可含负权边，可判负权环
+	Floyd			多源	可含负权边
 Tarjan
 	强连通分量
 	割点
 	桥
 	无向图的点双连通分支
 	无向图的边双连通分支
-
+计算几何
+	Vector(x, y)
+		Vector +(Vector);
+		Vector -(Vector);
+		Vector *(double);
+		double *(Vector);
+		double ^(Vector);
+		double length();
+		Vector unit();
+		double project(Vector);
+	Point(x, y)
+	Line(Point a, Point b)
+	
+	double dist(Point, Point);
+	double dist(Point, Line);
 
 	
 	
