@@ -6,7 +6,7 @@
 解：满足上述条件的k, k为整数 
 解空间：[0, R] 中的整数
 判别函数：f(k) = 左边小矩形面积 - 右边小矩形面积，单调递增
-解法：二分法求k1, k2使得f(k1) = f(k2)大于0且最小，k2即为答案
+解法：二分法求k0使得f(k0) >= 0，然后找k1的下界使得f(k1) == f(k0) 
 
 注意：
 1. 搜索的边界( [0,R] or [0,R+1] )
@@ -28,6 +28,8 @@ struct rect{
 int R, N;
 rect r[MAX];
 
+// judge(k) 表示k左边的矩形 - k右边的矩形面积
+// 易证judge(k)关于k单调递增 
 long long judge(int k){
 	long long lsum = 0, rsum = 0;
 	for(int i = 0; i < N; i++){

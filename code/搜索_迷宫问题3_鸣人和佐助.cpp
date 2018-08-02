@@ -20,6 +20,17 @@ struct point{
 
 char maze[MAX][MAX];
 bool flag[MAX][MAX][10];
+
+bool isEndState(point & p){
+	return p.x == endx && p.y == endy;
+}
+
+void pushIfUnvisited(queue<point> & q, point p){
+	if(!flag[p.x][p.y][p.ckl]){
+		flag[p.x][p.y][p.ckl] = 1;
+	}
+	q.push(p);
+}
 /*
  状态：point(x, y, step, ckl), 0<=x<=n-1, 0<=y<=m-1, maze[x][y]='*'or'#'  (flag也算状态的一部分，但是省略了)
  转移：(x, y, step, ckl) -> (nx, ny, step+1, ckl), maze[nx][ny] = '*', flag[nx][ny] = 0 
@@ -30,13 +41,12 @@ bool flag[MAX][MAX][10];
 int bfs(int x, int y, int ckl){
 	// 状态起点 
 	queue<point> q;
-	q.push(point(x, y, 0, ckl));
-	flag[x][y][ckl] = 1;
+	pushIfUnvisited(q, point(x, y, 0, ckl));
 	while(q.size()){
 		// 特判：状态终点 
 		point p = q.front(); q.pop();
 //		printf("visit (%d, %d), steps = %d\n", p.x, p.y, p.steps);
-		if(p.x == endx && p.y == endy){
+		if(isEndState(p)){
 			return p.steps;
 		}
 		// 遍历可达状态 
@@ -45,13 +55,11 @@ int bfs(int x, int y, int ckl){
 			int ny = p.y + dy[i];
 			if(nx >= 0 && nx < n && ny >= 0 && ny < m){
 				// 状态转移 
-				if('*' == maze[nx][ny] && !flag[nx][ny][p.ckl]){
-					flag[nx][ny][p.ckl] = 1;
-					q.push(point(nx, ny, p.steps + 1, p.ckl));
+				if('*' == maze[nx][ny]){
+					pushIfUnvisited(q, point(nx, ny, p.steps + 1, p.ckl));
 				}
-				else if('#' == maze[nx][ny] && p.ckl > 0 && !flag[nx][ny][p.ckl-1]){
-					flag[nx][ny][p.ckl-1] = 1;
-					q.push(point(nx, ny, p.steps + 1, p.ckl - 1));
+				else if('#' == maze[nx][ny] && p.ckl > 0){
+					pushIfUnvisited(q, point(nx, ny, p.steps + 1, p.ckl - 1));
 				}
 				/* 分类讨论要清晰，不重复也不遗漏 
 				int steps = p.steps;

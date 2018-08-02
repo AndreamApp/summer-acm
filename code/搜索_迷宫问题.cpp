@@ -19,6 +19,7 @@ struct point{
 int maze[n+2][n+2]; 
 int len;
 vector<point> path;
+
 int minLen = 1 << 30;
 vector<point> minPath;
 

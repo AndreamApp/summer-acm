@@ -2,7 +2,7 @@
 /*
 状态：dp[i] 表示最后地点为第i个时的最大利润，1<=i<=n，求dp[n] 
 条件：dp[i] = i; 1<=i<=n
-方程：dp[i] = max(dp[j]) + p[i], 1<=i<=n, 1<=j<=min(i-1, m[i]-k-1)
+方程：dp[i] = max(dp[j]) + p[i], 1<=i<=n, 1<=j<=i-1, m[j]<=m[i]-k-1
 复杂度：O(n)*O(n) = O(n^2) 
 */
 #include <iostream>

@@ -1,129 +1,163 @@
-#include <bits/stdc++.h>
+// (POJ 3691 (DNA Repair))[http://poj.org/problem?id=3691]
+#include <queue>
+#include <cstdio>
+#include <cstring>
 
 using namespace std;
 
-const int CHILD = 26;
+const int BRANCH = 26;
+const int MAX = 260000;
+const int inf = 0x3f3f3f3f;
 
-struct Node{
-	Node * childs[CHILD];
-	Node * prev; // 前缀指针 
-	bool bad; // 危险结点 
-};
+bool visit[MAX];
 
-Node tree[500000]; // 250 * 1000 <= 500000
-int nodeCount;
+class TrieMap {
+private:
+	struct Node {
+		Node * childs[BRANCH];
+		Node * prev; // 前缀指针 
+		int bad; // 危险结点 
+	};
 
-inline int hash(char c){
-	return c - 'A';
-}
+	Node tree[MAX]; // N * L <= 250 * 1000 = 250000
+	int nodeCount; // 初始化为1，0号结点单独初始化 
 
-// 将模式串插入Trie树中 
-void insertTrieTree(char * dna){
-	Node * root = &tree[1];
-	int c;
-	for(int i = 0; dna[i]; i++){
-		c = hash(dna[i]);
-		if(root->childs[c] == NULL)
-			root->childs[c] =  tree + nodeCount++;
-		root = root->childs[c];
+public:
+	void init() {
+		nodeCount = 1;
+		memset(tree, 0, sizeof tree);
+		memset(visit, 0, sizeof visit);
 	}
-	root->bad = true;
-}
 
-// 向Trie树中添加前缀指针，构造Trie图：即为所有结点设置合适的prev和bad 
-void buildTrieMap(){
-	for(int i = 0; i < CHILD; i++){
-		tree[0].childs[i] = &tree[1];
+	inline int hash(char c) {
+		return c - 'A';
 	}
-	tree[0].prev = NULL;
-	tree[1].prev = &tree[0];
-	// 使用栈模拟深度优先搜索 
-	deque<Node*> q;
-	q.push_back(&tree[1]);
-	while(q.size()){
-		Node * root = q.back(); q.pop_back();
-		// 对于每一个子节点 
-		for(int i = 0; i < CHILD; i++){
-			Node * child = root->childs[i];
-			if(child){
-				// 沿着父节点的前缀结点 
-				Node * prev = root->prev;
-				while(prev){
-					if(prev->childs[i]){ // 匹配相同后缀 
-						child->prev = prev->childs[i];
-						if(child->prev->bad) child->bad = true; // 危险结点 
+
+	// 将模式串插入Trie树中 
+	void insertTrieTree(char * dna) {
+		Node * root = &tree[0];
+		int c;
+		for (int i = 0; dna[i]; i++) {
+			c = hash(dna[i]);
+			if (root->childs[c] == NULL) {
+				root->childs[c] = tree + nodeCount;
+				nodeCount++;
+			}
+			root = root->childs[c];
+		}
+		root->bad = true;
+	}
+
+	// 向Trie树中添加前缀指针，构造Trie图：即为所有结点设置合适的prev和bad 
+	void buildTrieMap() {
+		queue<Node*> q;
+		Node * root = &tree[0];
+		for (int i = 0; i < BRANCH; i++) {
+			if (root->childs[i]) {
+				root->childs[i]->prev = root;
+				q.push(root->childs[i]);
+			}
+			else {
+				root->childs[i] = root;
+			}
+		}
+		root->prev = NULL;
+
+		while (q.size()) {
+			Node * p = q.front(); q.pop();
+			for (int i = 0; i < BRANCH; i++) {
+				if (p->childs[i]) {
+					p->childs[i]->prev = p->prev->childs[i];
+					p->childs[i]->bad += p->prev->childs[i]->bad;
+					q.push(p->childs[i]);
+				}
+				else {
+					p->childs[i] = p->prev->childs[i];
+				}
+			}
+		}
+	}
+
+	int match(char * dna, int begin, int end, int delta) {
+		Node * p = &tree[0];
+		int res = 0;
+		int c;
+		for (int i = begin; i != end; i += delta) {
+			c = hash(dna[i]);
+			while (1) {
+				if (p->childs[c]) {
+					// 子节点找不到，去前缀指针找 
+					//					if(p->childs[c] == tree){
+					//						p = p->prev;
+					//					}
+					// 匹配到一个危险结点 
+					if (p->childs[c]->bad) {
+						p = p->childs[c];
+						if(!visit[p - tree]){
+							visit[p - tree] = 1;
+							res += p->bad;
+						}
 						break;
 					}
-					prev = prev->prev;
+					// 子节点是安全结点 
+					else {
+						p = p->childs[c];
+						break;
+					}
 				}
-				// 递归构造前缀指针 
-				q.push_back(child);
-			}
-		}
-	}
-}
-
-/*
-从ROOT出发，按照当前串的下一
-个字符ch来进行在树上的移动。若当前点P不存在通过ch
-连接的儿子，那么考虑P的前缀指针指向的节点Q，如果还
-无法找到通过ch连接的儿子节点，再考虑Q的前缀指针…
-直到找到通过ch连接的儿子，再继续遍历。
-
-如果遍历过程中经过了某个终止节点，则说明S包含该终
-止节点代表的模式串.
-
-如果遍历过程中经过了某个非终止节点的危险节点，
-则可以断定S包含某个模式串。要找出是哪个，沿着危险
-节点的前缀指针链走，碰到终止节点即可。
-*/
-int searchPattern(char * dna){
-	int res = 0;
-	Node * root = &tree[1];
-	int c;
-	for(int i = 0; dna[i]; i++){
-		c = hash(dna[i]);
-		if(root->bad){
-			res++;
-		}
-		if(root->childs[c]){
-			root = root->childs[c];
-			if(dna[i+1] == 0 && root->bad){
-				res++;
-			}
-		}
-		else{
-			Node * prev = root->prev;
-			while(prev){
-				if(prev->childs[c]){ // 找到某个后缀匹配，可以继续搜索 
-					root = prev->childs[c];
+				else {
 					break;
 				}
-				prev = prev->prev;
-			}
-			// 通过前缀指针找到0号结点了：没有匹配的模式串 
-			if(prev == NULL){
-				break;
 			}
 		}
+		return res;
 	}
-	return res;
+
+};
+
+int decimal(int n) {
+	int cnt = 0;
+	while (n) {
+		n /= 10;
+		cnt++;
+	}
+	return cnt;
 }
 
-int main(){
-	int t, n;
-	char virus[1005]; 
-	char program[1005]; 
+TrieMap trie;
+char dna[5100050];
+char rna[5100050];
+
+int main() {
+	int n, m;
+	int t;
 	scanf("%d", &t);
-	while(t--){
+	while (t--) {
 		scanf("%d", &n);
-		for(int i = 0; i < n; i++){
-			scanf("%s", virus);
-			insertTrieTree(virus);
-		} 
-		buildTrieMap();
-		scanf("%s", program);
-		printf("%d", searchPattern(program));
+		trie.init();
+		for (int i = 0; i < n; i++) {
+			scanf("%s", dna);
+			trie.insertTrieTree(dna);
+		}
+		trie.buildTrieMap();
+		scanf("%s", dna);
+		int i = 0, q;
+		char c;
+		for (int j = 0; dna[j]; j++) {
+			if ('[' == dna[j]) {
+				sscanf(dna + j, "[%d%c]", &q, &c);
+				j += decimal(q) + 2;
+				for (int k = 0; k < q; k++) {
+					rna[i] = c;
+					i++;
+				}
+			}
+			else {
+				rna[i] = dna[j];
+				i++;
+			}
+		}
+		printf("%d\n", trie.match(rna, 0, strlen(rna), 1) + trie.match(rna, strlen(rna) - 1, -1, -1));
 	}
 	return 0;
 }

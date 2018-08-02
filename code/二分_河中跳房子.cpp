@@ -13,6 +13,9 @@ const int MAX = 50005;
 int L, N, M;
 int a[MAX];
 
+// m是常参数，表示最多可移走的石头数
+// judge表示在最短步长d的限制下，能否过河
+// 则judge函数是关于d的单调递减函数，若a < b，则judge(a) >= judge(b)，可用二分查找分界点 
 bool judge(int d, int m){
 	long long sum = 0;
 	for(int i = 1; i <= N+1 && m >= 0; i++){
@@ -37,7 +40,8 @@ int search(int a, int b){
 			b = m;
 		}
 	}
-	if(judge(b, M)) return b;
+	// Q: 循环结束后，b-a的取值范围是多少？ 
+	if(judge(b, M)) return b; // Q: 如果不加这个条件，在什么情况下会出错？ 
 	return a;
 }
 
