@@ -5,16 +5,16 @@ using namespace std;
 struct homework{
 	char name[51];
 	int d; // deadline
-	int c; // Íê³ÉËùĞèÊ±¼ä 
+	int c; // å®Œæˆæ‰€éœ€æ—¶é—´ 
 };
 
-// Q: Èç¹ûÖ»ĞèÒª¼ÆËã×îµÍ¿Û·Ö£¬ÄÄĞ©×´Ì¬ÖµÊÇ±ØÒªµÄ£¿
-// Q: ÎªÊ²Ã´ÒªÌí¼ÓÆäËû×´Ì¬Öµ£¬ÓĞÊ²Ã´ÓÃ£¿ 
+// Q: å¦‚æœåªéœ€è¦è®¡ç®—æœ€ä½æ‰£åˆ†ï¼Œå“ªäº›çŠ¶æ€å€¼æ˜¯å¿…è¦çš„ï¼Ÿ
+// Q: ä¸ºä»€ä¹ˆè¦æ·»åŠ å…¶ä»–çŠ¶æ€å€¼ï¼Œæœ‰ä»€ä¹ˆç”¨ï¼Ÿ 
 struct state{
-	int score; // Íê³É¸Ã×´Ì¬ÖĞËùÓĞ×÷ÒµºóµÄ·ÖÊı 
-	int finishDay; // Íê³É¸Ã×´Ì¬ÖĞËùÓĞ×÷ÒµµÄÊ±¼ä 
-	int pre; // ´ïµ½¸Ã×´Ì¬µÄÉÏÒ»¸ö×´Ì¬ 
-	int last; // ´ïµ½¸Ã×´Ì¬Íê³ÉµÄ×îºóÒ»Ïî×÷Òµ 
+	int score; // å®Œæˆè¯¥çŠ¶æ€ä¸­æ‰€æœ‰ä½œä¸šåçš„åˆ†æ•° 
+	int finishDay; // å®Œæˆè¯¥çŠ¶æ€ä¸­æ‰€æœ‰ä½œä¸šçš„æ—¶é—´ 
+	int pre; // è¾¾åˆ°è¯¥çŠ¶æ€çš„ä¸Šä¸€ä¸ªçŠ¶æ€ 
+	int last; // è¾¾åˆ°è¯¥çŠ¶æ€å®Œæˆçš„æœ€åä¸€é¡¹ä½œä¸š 
 };
 
 const int inf = 1 << 30;
@@ -23,7 +23,7 @@ int N;
 homework h[17];
 state dp[1<<15];
 
-// ½èÖúpreºÍlast£¬»ñÈ¡µ½Íê³ÉÄ³¸ö×´Ì¬µÄÂ·¾¶ 
+// å€ŸåŠ©preå’Œlastï¼Œè·å–åˆ°å®ŒæˆæŸä¸ªçŠ¶æ€çš„è·¯å¾„ 
 vector<int> getPath(int state){
 	vector<int> path;
 	while(state != 0){
@@ -46,18 +46,18 @@ int main(){
 		dp[0].score = 0;
 		dp[0].finishDay = 0;
 		int n = 1 << N;
-		for(int i = 1; i < n; i++){ // Çó½âdp[i]
+		for(int i = 1; i < n; i++){ // æ±‚è§£dp[i]
 			dp[i].score = inf;
 			for(int k = 0; k < N; k++){ 
 				if(i & (1 << k)){
-					int pre = i & ~(1<<k); // Q: i & ~(1<<k) µÄº¬ÒåÊÇÊ²Ã´£¿ 
+					int pre = i & ~(1<<k); // Q: i & ~(1<<k) çš„å«ä¹‰æ˜¯ä»€ä¹ˆï¼Ÿ 
 					int finish = dp[pre].finishDay + h[k].c;
 					int score = max(finish - h[k].d, 0) + dp[pre].score;
-					// µ±Ç°×´Ì¬·ÖÊı¸üĞ¡
+					// å½“å‰çŠ¶æ€åˆ†æ•°æ›´å°
 					if(score < dp[i].score){  
 						dp[i] = state{score, finish, pre, k};
 					}
-					// µ±Ç°×´Ì¬ËäÈ»·ÖÊıÏàÍ¬£¬µ«ÊÇ×ÖµäĞò¸üĞ¡ 
+					// å½“å‰çŠ¶æ€è™½ç„¶åˆ†æ•°ç›¸åŒï¼Œä½†æ˜¯å­—å…¸åºæ›´å° 
 					else if(score == dp[i].score && getPath(pre) < getPath(dp[i].pre)){ 
 						dp[i] = state{score, finish, pre, k};
 					}

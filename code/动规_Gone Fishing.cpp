@@ -3,13 +3,13 @@
 using namespace std;
 
 /*
-×´Ì¬£ºg(i, j, k) ±íÊ¾µ±Ç°ÔÚµÚi¸öµº£¬Ã¿5·ÖÖÓ¿É²¶»ñjÌõÓã£¬Ê£ÓàÊ±¼äÎªk µÄ ÄÜ²¶»ñµÄ×î´óÓãÊý, 1<=i<=n, 0<=j, 0<=k<=12*h
-³õÊ¼£ºg(1, f[1], h*12)
-±ß½ç£ºg(n, f[n], k) = (2*f[n] - N*d[n]) * N / 2, d[n] != 0. ÆäÖÐÏîÊý N = min(k, f[n]/d[n])
-                      k*f[n], d[n] = 0.                     # µÈ²îÊýÁÐÇóºÍ 
-×ªÒÆ£ºg(i, j, k) = max( g(i, j-d[i], k-1) + j, g(i+1, f[i+1], k-t[i]) ) , 1<=i<=n-1 
-		# g(i, j-d[i], k-1) + j ±íÊ¾ÏÂÎå·ÖÖÓ¼ÌÐøÔÚiµº²¶ÓãµÄÊÕÒæ 
-		# g(i+1, f[i+1], k-t[i]) ±íÊ¾ÏÂÎå·ÖÖÓÇ°È¥i+1µ½²¶ÓãµÄÊÕÒæ 
+çŠ¶æ€ï¼šg(i, j, k) è¡¨ç¤ºå½“å‰åœ¨ç¬¬iä¸ªå²›ï¼Œæ¯5åˆ†é’Ÿå¯æ•èŽ·jæ¡é±¼ï¼Œå‰©ä½™æ—¶é—´ä¸ºk çš„ èƒ½æ•èŽ·çš„æœ€å¤§é±¼æ•°, 1<=i<=n, 0<=j, 0<=k<=12*h
+åˆå§‹ï¼šg(1, f[1], h*12)
+è¾¹ç•Œï¼šg(n, f[n], k) = (2*f[n] - N*d[n]) * N / 2, d[n] != 0. å…¶ä¸­é¡¹æ•° N = min(k, f[n]/d[n])
+                      k*f[n], d[n] = 0.                     # ç­‰å·®æ•°åˆ—æ±‚å’Œ 
+è½¬ç§»ï¼šg(i, j, k) = max( g(i, j-d[i], k-1) + j, g(i+1, f[i+1], k-t[i]) ) , 1<=i<=n-1 
+		# g(i, j-d[i], k-1) + j è¡¨ç¤ºä¸‹äº”åˆ†é’Ÿç»§ç»­åœ¨iå²›æ•é±¼çš„æ”¶ç›Š 
+		# g(i+1, f[i+1], k-t[i]) è¡¨ç¤ºä¸‹äº”åˆ†é’Ÿå‰åŽ»i+1åˆ°æ•é±¼çš„æ”¶ç›Š 
 */
 
 const int MAX = 27;

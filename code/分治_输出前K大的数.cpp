@@ -8,7 +8,7 @@ using namespace std;
 int n, k;
 int a[100005];
 
-void arrange(int L, int J, int k){
+void arrange(int I, int J, int k){
 	int key = a[I];
 	int i = I, j = J;
 	while(i < j){

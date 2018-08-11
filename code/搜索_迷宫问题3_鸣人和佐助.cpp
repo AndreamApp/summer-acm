@@ -32,39 +32,39 @@ void pushIfUnvisited(queue<point> & q, point p){
 	q.push(p);
 }
 /*
- ×´Ì¬£ºpoint(x, y, step, ckl), 0<=x<=n-1, 0<=y<=m-1, maze[x][y]='*'or'#'  (flagÒ²Ëã×´Ì¬µÄÒ»²¿·Ö£¬µ«ÊÇÊ¡ÂÔÁË)
- ×ªÒÆ£º(x, y, step, ckl) -> (nx, ny, step+1, ckl), maze[nx][ny] = '*', flag[nx][ny] = 0 
+ çŠ¶æ€ï¼špoint(x, y, step, ckl), 0<=x<=n-1, 0<=y<=m-1, maze[x][y]='*'or'#'  (flagä¹Ÿç®—çŠ¶æ€çš„ä¸€éƒ¨åˆ†ï¼Œä½†æ˜¯çœç•¥äº†)
+ è½¬ç§»ï¼š(x, y, step, ckl) -> (nx, ny, step+1, ckl), maze[nx][ny] = '*', flag[nx][ny] = 0 
        (x, y, step, ckl) -> (nx, ny, step+1, ckl-1), maze[nx][ny] = '#', ckl > 0, flag[nx][ny] = 0 
-       (nx, ny)ÊôÓÚ{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
+       (nx, ny)å±äº{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
        
 */
 int bfs(int x, int y, int ckl){
-	// ×´Ì¬Æğµã 
+	// çŠ¶æ€èµ·ç‚¹ 
 	queue<point> q;
 	pushIfUnvisited(q, point(x, y, 0, ckl));
 	while(q.size()){
-		// ÌØÅĞ£º×´Ì¬ÖÕµã 
+		// ç‰¹åˆ¤ï¼šçŠ¶æ€ç»ˆç‚¹ 
 		point p = q.front(); q.pop();
 //		printf("visit (%d, %d), steps = %d\n", p.x, p.y, p.steps);
 		if(isEndState(p)){
 			return p.steps;
 		}
-		// ±éÀú¿É´ï×´Ì¬ 
+		// éå†å¯è¾¾çŠ¶æ€ 
 		for(int i = 0; i < 4; i++){
 			int nx = p.x + dx[i];
 			int ny = p.y + dy[i];
 			if(nx >= 0 && nx < n && ny >= 0 && ny < m){
-				// ×´Ì¬×ªÒÆ 
+				// çŠ¶æ€è½¬ç§» 
 				if('*' == maze[nx][ny]){
 					pushIfUnvisited(q, point(nx, ny, p.steps + 1, p.ckl));
 				}
 				else if('#' == maze[nx][ny] && p.ckl > 0){
 					pushIfUnvisited(q, point(nx, ny, p.steps + 1, p.ckl - 1));
 				}
-				/* ·ÖÀàÌÖÂÛÒªÇåÎú£¬²»ÖØ¸´Ò²²»ÒÅÂ© 
+				/* åˆ†ç±»è®¨è®ºè¦æ¸…æ™°ï¼Œä¸é‡å¤ä¹Ÿä¸é—æ¼ 
 				int steps = p.steps;
 				int ckl = p.ckl;
-				// ×´Ì¬×ªÒÆ 
+				// çŠ¶æ€è½¬ç§» 
 				if('*' == maze[nx][ny]){
 					steps++;
 				}

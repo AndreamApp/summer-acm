@@ -140,6 +140,7 @@ Tarjan
 	
 	double dist(Point, Point);
 	double dist(Point, Line);
+	
 
 	
 	

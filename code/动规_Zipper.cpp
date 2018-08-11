@@ -1,9 +1,9 @@
 // http://icpcsummer.openjudge.cn/2018hw1/12/
 /*
-״̬��dp[j] ��ʾǰi���������ճ�j�ķ�������1<=i<=n��1<=j<=x
-������dp[0] = 1 
-���̣�dp[j] = dp[j] + dp[j-a[i]], 1<=i<=n, x>=j>=a[i] (j-a[i] >= 0)
-���Ӷȣ�O(nx)  �ռ临�Ӷȣ�O(x)
+状态：dp[j] 表示前i个数里挑凑成j的方案数，1<=i<=n，1<=j<=x
+条件：dp[0] = 1 
+方程：dp[j] = dp[j] + dp[j-a[i]], 1<=i<=n, x>=j>=a[i] (j-a[i] >= 0)
+复杂度：O(nx)  空间复杂度：O(x)
 */
 #include <iostream>
 #include <cstdio>

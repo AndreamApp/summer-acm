@@ -7,8 +7,8 @@ const int inf = 1 << 30;
 
 int n, q;
 
-// + ÓÅÏÈ¼¶¸ßÓÚ <<
-// l << 1 + 1 ÆäÊµÊÇ l << (1 + 1)£¬ÊÇ´íµÄ 
+// + ä¼˜å…ˆçº§é«˜äº <<
+// l << 1 + 1 å…¶å®æ˜¯ l << (1 + 1)ï¼Œæ˜¯é”™çš„ 
 inline int L(int l){
 	return (l << 1) + 1;
 }
@@ -37,7 +37,7 @@ struct node{
 };
 node tree[MAX*3+1];
 
-// ½áµãv¶ÔÓ¦µÄÇø¼äÎª[l,r] 
+// ç»“ç‚¹vå¯¹åº”çš„åŒºé—´ä¸º[l,r] 
 // build(0, 0, n-1) -> long long a[n];
 void build(int v, int l, int r){
 	tree[v].l = l;
@@ -50,7 +50,7 @@ void build(int v, int l, int r){
 	}
 }
 
-// ¸ù½Úµãv¿ªÊ¼²éÕÒµÚi¸öÖµ£¬½«ÆäÉèÎªval
+// æ ¹èŠ‚ç‚¹vå¼€å§‹æŸ¥æ‰¾ç¬¬iä¸ªå€¼ï¼Œå°†å…¶è®¾ä¸ºval
 // insert(0, i, val) -> a[i] = val; 
 void insert(int v, int i, int val){
 	if(tree[v].is(i, i)){
@@ -70,18 +70,18 @@ void insert(int v, int i, int val){
 	}
 }
 
-// ×´Ì¬£º(l, r), 0<=l<=r<=n-1 
-// ×´Ì¬Öµ£º(sum, lazy) 
-// ³õÊ¼£º(tree[v].l, tree[v].r)  ÖÕÖ¹(l, r), l >= tree[v].l, r <= tree[v].r 
+// çŠ¶æ€ï¼š(l, r), 0<=l<=r<=n-1 
+// çŠ¶æ€å€¼ï¼š(sum, lazy) 
+// åˆå§‹ï¼š(tree[v].l, tree[v].r)  ç»ˆæ­¢(l, r), l >= tree[v].l, r <= tree[v].r 
 void query(int v, int l, int r, int & maxv, int & minv){
-	// ÖÕÖ¹×´Ì¬ 
+	// ç»ˆæ­¢çŠ¶æ€ 
 	if(tree[v].is(l, r)){
 		maxv = max(tree[v].maxv, maxv);
 		minv = min(tree[v].minv, minv);
 		return;
 	}
 	
-	// ·ÖÖÎ²éÑ¯ 
+	// åˆ†æ²»æŸ¥è¯¢ 
 	int mid = tree[v].mid();
 	if(r <= mid){
 		query(L(v), l, r, maxv, minv);
@@ -90,14 +90,14 @@ void query(int v, int l, int r, int & maxv, int & minv){
 		query(R(v), l, r, maxv, minv);
 	}
 	else{
-		// ½«×óÓÒÁ½¸ö×ÓÇø¼äµÄ½á¹ûÕûºÏ 
+		// å°†å·¦å³ä¸¤ä¸ªå­åŒºé—´çš„ç»“æœæ•´åˆ 
 		query(L(v), l, mid, maxv, minv);
 		query(R(v), mid+1, r, maxv, minv);
 	}
 } 
 
 
-// Ïß¶ÎÊ÷£¨Çø¼äÊ÷£©¾ÍÊÇ°Ñ¶Ôn¸öÊıµÄ²Ù×÷×ª»¯Îª¶Ôlogn¸öÇø¼äµÄ²Ù×÷¡£±ÈÈçÇø¼ä²éÑ¯¡¢Çø¼ä¸üĞÂ 
+// çº¿æ®µæ ‘ï¼ˆåŒºé—´æ ‘ï¼‰å°±æ˜¯æŠŠå¯¹nä¸ªæ•°çš„æ“ä½œè½¬åŒ–ä¸ºå¯¹lognä¸ªåŒºé—´çš„æ“ä½œã€‚æ¯”å¦‚åŒºé—´æŸ¥è¯¢ã€åŒºé—´æ›´æ–° 
 int main(){
 //	freopen("in.txt", "r", stdin);
 	int val;
@@ -111,7 +111,7 @@ int main(){
 	for(int i = 0; i < q; i++){
 		scanf("%d%d", &a, &b);
 		int maxv = -inf, minv = inf;
-		query(0, a-1, b-1, maxv, minv); // ĞèÒª²éÑ¯Á½¸öÖµ£¬ÓÃÒıÓÃ´«²Î£¨»òÓÃÈ«¾Ö±äÁ¿£© 
+		query(0, a-1, b-1, maxv, minv); // éœ€è¦æŸ¥è¯¢ä¸¤ä¸ªå€¼ï¼Œç”¨å¼•ç”¨ä¼ å‚ï¼ˆæˆ–ç”¨å…¨å±€å˜é‡ï¼‰ 
 		printf("%d\n", maxv - minv);
 	}
 	return 0;

@@ -4,8 +4,8 @@ using namespace std;
 int nNodesCount = 0;
 struct CNode {
     CNode* pChilds[LETTERS];
-    CNode* pPrev; //Ç°×ºÖ¸Õë
-    bool bBadNode; //ÊÇ·ñÊÇÎ£ÏÕ½Úµã
+    CNode* pPrev; //å‰ç¼€æŒ‡é’ˆ
+    bool bBadNode; //æ˜¯å¦æ˜¯å±é™©èŠ‚ç‚¹
     void Init()
     {
         memset(pChilds, 0, sizeof(pChilds));
@@ -15,7 +15,7 @@ struct CNode {
 };
 CNode Tree[200]; 
 void Insert(CNode* pRoot, char* s)
-{ //½«Ä£Ê½´®s²åÈëtrieÊ÷
+{ //å°†æ¨¡å¼ä¸²sæ’å…¥trieæ ‘
     for (int i = 0; s[i]; i++) {
         if (pRoot->pChilds[s[i] - 'a'] == NULL) {
             pRoot->pChilds[s[i] - 'a'] = Tree + nNodesCount;
@@ -26,7 +26,7 @@ void Insert(CNode* pRoot, char* s)
     pRoot->bBadNode = true;
 }
 void BuildDfa()
-{ //ÔÚtrieÊ÷ÉÏ¼ÓÇ°×ºÖ¸Õë
+{ //åœ¨trieæ ‘ä¸ŠåŠ å‰ç¼€æŒ‡é’ˆ
     for (int i = 0; i < LETTERS; i++)
         Tree[0].pChilds[i] = Tree + 1;
     Tree[0].pPrev = NULL;
@@ -45,7 +45,7 @@ void BuildDfa()
                         p->pPrev = pPrev->pChilds[i];
                         if (p->pPrev->bBadNode)
                             p->bBadNode = true;
-                        //×Ô¼ºµÄpPrevÖ¸ÏòµÄ½ÚµãÊÇÎ£ÏÕ½Úµã£¬Ôò×Ô¼ºÒ²ÊÇÎ£ÏÕ½Úµã
+                        //è‡ªå·±çš„pPrevæŒ‡å‘çš„èŠ‚ç‚¹æ˜¯å±é™©èŠ‚ç‚¹ï¼Œåˆ™è‡ªå·±ä¹Ÿæ˜¯å±é™©èŠ‚ç‚¹
                         break;
                     }
                     else
@@ -54,10 +54,10 @@ void BuildDfa()
                 q.push_back(p);
             }
         }
-    } //¶ÔÓ¦ÓÚwhile( ! q.empty() )
+    } //å¯¹åº”äºwhile( ! q.empty() )
 }
 bool SearchDfa(char* s)
-{ //·µ»ØÖµÎªtrueÔòËµÃ÷°üº¬Ä£Ê½´®
+{ //è¿”å›å€¼ä¸ºtrueåˆ™è¯´æ˜åŒ…å«æ¨¡å¼ä¸²
     CNode* p = Tree + 1;
     for (int i = 0; s[i]; i++) {
         while (true) {
@@ -77,7 +77,7 @@ int main()
 {
     nNodesCount = 2;
     int M, N;
-    scanf("%d%d", &N, &M); //N¸öÄ£Ê½´®£¬M¸ö¾ä×Ó
+    scanf("%d%d", &N, &M); //Nä¸ªæ¨¡å¼ä¸²ï¼ŒMä¸ªå¥å­
     for (int i = 0; i < N; i++) {
         char s[20];
         scanf("%s", s);

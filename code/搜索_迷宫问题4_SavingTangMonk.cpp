@@ -12,38 +12,38 @@ int dy[] = {0, -1, 0, 1};
 
 struct point{
 	int x, y, steps;
-	char key; // ÊÖÀïµÄÔ¿³×Êı 
-	char layout; // ³¡ÉÏÊØÎÀµÄÇé¿ö 
+	char key; // æ‰‹é‡Œçš„é’¥åŒ™æ•° 
+	char layout; // åœºä¸Šå®ˆå«çš„æƒ…å†µ 
 	bool kill;
 };
 
-int S; // ÊØÎÀÊıÁ¿ 
-char s[MAX][MAX]; // ÊØÎÀÏÂ±ê 
+int S; // å®ˆå«æ•°é‡ 
+char s[MAX][MAX]; // å®ˆå«ä¸‹æ ‡ 
 char maze[MAX][MAX];
 bool flag[MAX][MAX][10][33]; // 0 <= lauout < 32
 /*
- ×´Ì¬£ºpoint(x, y, steps, key, layout, kill), 0<=x<=n-1, 0<=y<=n-1, 0<=key<=9, 0<=layout<32, 0<=kill<=1, maze[x][y]='.'or'#'or'S'or'%d'  (flagÒ²Ëã×´Ì¬µÄÒ»²¿·Ö£¬µ«ÊÇÊ¡ÂÔÁË)
- ×ªÒÆ£º(x, y, steps, key, layout, 0) -> (nx, ny, steps+1, key, layout, 0), maze[nx][ny] = '.', flag[nx][ny][key][layout] = 0 
+ çŠ¶æ€ï¼špoint(x, y, steps, key, layout, kill), 0<=x<=n-1, 0<=y<=n-1, 0<=key<=9, 0<=layout<32, 0<=kill<=1, maze[x][y]='.'or'#'or'S'or'%d'  (flagä¹Ÿç®—çŠ¶æ€çš„ä¸€éƒ¨åˆ†ï¼Œä½†æ˜¯çœç•¥äº†)
+ è½¬ç§»ï¼š(x, y, steps, key, layout, 0) -> (nx, ny, steps+1, key, layout, 0), maze[nx][ny] = '.', flag[nx][ny][key][layout] = 0 
        (x, y, steps, key, layout, 0) -> (nx, ny, steps+1, key, layout, 1), maze[nx][ny] = 'S', flag[nx][ny][key][layout] = 0
-       (x, y, steps, key, layout, 1) -> (x, y, steps+1, key, layout&~(1<<s[x][y]), 0), sÊÇmaze[x][y]Õâ¸öÊØÎÀµÄÏÂ±ê 
+       (x, y, steps, key, layout, 1) -> (x, y, steps+1, key, layout&~(1<<s[x][y]), 0), sæ˜¯maze[x][y]è¿™ä¸ªå®ˆå«çš„ä¸‹æ ‡ 
        (x, y, steps, key, layout, 0) -> (nx, ny, steps+1, key+1, layout, 1), maze[nx][ny] = key+1+'0', flag[nx][ny][key][layout] = 0
-       (nx, ny)ÊôÓÚ{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
- ³õÊ¼£º(x, y, 0, 0, (1<<S)-1, 0), SÎªÊØÎÀ×ÜÊı 
- ÖÕÖ¹£º(endx, endy, steps, m, layout, 0) , steps¼´Îª´ğ°¸£¬Èç¹û´ï²»µ½ÖÕÖ¹×´Ì¬¼´ÎŞ½â 
+       (nx, ny)å±äº{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
+ åˆå§‹ï¼š(x, y, 0, 0, (1<<S)-1, 0), Sä¸ºå®ˆå«æ€»æ•° 
+ ç»ˆæ­¢ï¼š(endx, endy, steps, m, layout, 0) , stepså³ä¸ºç­”æ¡ˆï¼Œå¦‚æœè¾¾ä¸åˆ°ç»ˆæ­¢çŠ¶æ€å³æ— è§£ 
 */
 int bfs(int x, int y, int m){
-	// ×´Ì¬Æğµã 
+	// çŠ¶æ€èµ·ç‚¹ 
 	queue<point> q;
 	q.push(point{x, y, 0, 0, (1<<S)-1, 0});
 	flag[x][y][0][(1<<S)-1] = 1;
 	while(q.size()){
-		// ÌØÅĞ£º×´Ì¬ÖÕµã 
+		// ç‰¹åˆ¤ï¼šçŠ¶æ€ç»ˆç‚¹ 
 		point p = q.front(); q.pop();
 //		printf("visit (%d, %d), steps=%d, key=%d, layout=%d, kill=%d\n", p.x, p.y, p.steps, p.key, p.layout, p.kill);
 		if(p.x == endx && p.y == endy && p.key == m){
 			return p.steps;
 		}
-		// ±éÀú¿É´ï×´Ì¬ 
+		// éå†å¯è¾¾çŠ¶æ€ 
 		if(p.kill){
 			p.steps++;
 			p.layout &= ~(1<<s[p.x][p.y]);
@@ -55,8 +55,8 @@ int bfs(int x, int y, int m){
 				int nx = p.x + dx[i];
 				int ny = p.y + dy[i];
 				if(nx >= 0 && nx < n && ny >= 0 && ny < n){
-					// ×´Ì¬×ªÒÆ 
-					// ÄÃ²»µ½µÄÔ¿³×»òÕßÉ±ËÀ¹ıµÄÊØÎÀ¿ÉÒÔÖ±½Ó×ß  
+					// çŠ¶æ€è½¬ç§» 
+					// æ‹¿ä¸åˆ°çš„é’¥åŒ™æˆ–è€…æ€æ­»è¿‡çš„å®ˆå«å¯ä»¥ç›´æ¥èµ°  
 					bool gothrough = maze[nx][ny] == '.'
 								 || maze[nx][ny] >= '1' && maze[nx][ny] <= '9' && maze[nx][ny] != p.key+1+'0'
 								 || (maze[nx][ny] == 'S' && (p.layout&(1<<s[nx][ny])) == 0);
@@ -64,7 +64,7 @@ int bfs(int x, int y, int m){
 						flag[nx][ny][p.key][p.layout] = 1;
 						q.push(point{nx, ny, p.steps+1, p.key, p.layout, 0});
 					}
-					// 'S' == maze[nx][ny] && (p.layout&(1<<s[nx][ny])) ±íÊ¾(nx, ny)ÔÚµ±Ç°³¡ÃæÉÏÓĞÊØÎÀ 
+					// 'S' == maze[nx][ny] && (p.layout&(1<<s[nx][ny])) è¡¨ç¤º(nx, ny)åœ¨å½“å‰åœºé¢ä¸Šæœ‰å®ˆå« 
 					else if('S' == maze[nx][ny] && (p.layout&(1<<s[nx][ny])) && !flag[nx][ny][p.key][p.layout]){
 						flag[nx][ny][p.key][p.layout] = 1;
 						q.push(point{nx, ny, p.steps+1, p.key, p.layout, 1});
@@ -86,7 +86,7 @@ int bfs(int x, int y, int m){
 
 int main(){
 //	freopen("in.txt", "r", stdin);
-	// ×¢ÒâÖ»ÓĞn=0ÇÒm=0²ÅÍ£Ö¹£¬ÓĞ¿ÉÄÜn!=0µ«ÊÇm=0 
+	// æ³¨æ„åªæœ‰n=0ä¸”m=0æ‰åœæ­¢ï¼Œæœ‰å¯èƒ½n!=0ä½†æ˜¯m=0 
 	while(~scanf("%d%d", &n, &m) && (n != 0 || m != 0)){
 		S = 0;
 		int x, y;
@@ -107,7 +107,7 @@ int main(){
 					endy = j;
 				}
 				else if('S' == maze[i][j]){
-					s[i][j] = S++; // ¼ÇÂ¼ÊØÎÀÏÂ±ê 
+					s[i][j] = S++; // è®°å½•å®ˆå«ä¸‹æ ‡ 
 				}
 			}
 		}

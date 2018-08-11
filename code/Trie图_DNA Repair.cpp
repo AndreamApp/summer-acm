@@ -13,22 +13,22 @@ class TrieMap{
 private:
 	struct Node{
 		Node * childs[BRANCH];
-		Node * prev; // Ç°×ºÖ¸Õë 
-		bool bad; // Î£ÏÕ½áµã 
+		Node * prev; // å‰ç¼€æŒ‡é’ˆ 
+		bool bad; // å±é™©ç»“ç‚¹ 
 	};
 	
 	Node tree[MAX]; // N * L <= 50 * 20 = 1000
-	int nodeCount; // ³õÊ¼»¯Îª1£¬0ºÅ½áµãµ¥¶À³õÊ¼»¯ 
+	int nodeCount; // åˆå§‹åŒ–ä¸º1ï¼Œ0å·ç»“ç‚¹å•ç‹¬åˆå§‹åŒ– 
 	
 	/*
-	 ×´Ì¬£ºdp[i][j]±íÊ¾Ä¸´®³¤¶ÈÎªiµÄÇ°×º£¬±éÀúµ½´ï½Úµãj£¨°²È«½Úµã£©£¬ĞèÒªĞŞ¸ÄµÄ×îÉÙ´ÎÊı¡£Èç¹ûjÊÇÎ£ÏÕ½áµã£¬ÄÇdp[i][j]¾ÍÊÇÎŞÇî´ó 
-	       0<=i<=len(str), 0<=j<nodeCount£¬min(dp[len][j])¾ÍÊÇ´ğ°¸ 
-	 Ìõ¼ş£ºdp[0][0] = 0; ±íÊ¾Ä¸´®³¤¶ÈÎª0µÄÇ°×ºÖ»ĞèĞŞ¸Ä0´Î¾ÍÄÜµ½´ï0ºÅ½áµã£¨¸ù½Úµã£©
-	       ÆäËûµÄdp[i][j] = inf; 
-	 ×ªÒÆ£ºdp[i+1][son(j)] = min(dp[i+1][son(j)], dp[i][j] + Char(j, son(j)) != str[i]) 
-	       son(j)ÊÇj½áµã¿É´ïµÄ°²È«×Ó½Úµã 
-	       Char(j, son(j)) != str[i] ±íÊ¾Ä¸´®µÄµÚi+1¸ö×Ö·ûÊÇ·ñºÍjµ½´ïson(j)ËùĞèµÄ×Ö·ûÏàÍ¬
-		   ¼´Ä¸´®ÊÇ·ñĞèÒªÔÙĞŞ¸ÄÒ»¸ö×Ö·û²ÅÄÜµ½´ïson(j) 
+	 çŠ¶æ€ï¼šdp[i][j]è¡¨ç¤ºæ¯ä¸²é•¿åº¦ä¸ºiçš„å‰ç¼€ï¼Œéå†åˆ°è¾¾èŠ‚ç‚¹jï¼ˆå®‰å…¨èŠ‚ç‚¹ï¼‰ï¼Œéœ€è¦ä¿®æ”¹çš„æœ€å°‘æ¬¡æ•°ã€‚å¦‚æœjæ˜¯å±é™©ç»“ç‚¹ï¼Œé‚£dp[i][j]å°±æ˜¯æ— ç©·å¤§ 
+	       0<=i<=len(str), 0<=j<nodeCountï¼Œmin(dp[len][j])å°±æ˜¯ç­”æ¡ˆ 
+	 æ¡ä»¶ï¼šdp[0][0] = 0; è¡¨ç¤ºæ¯ä¸²é•¿åº¦ä¸º0çš„å‰ç¼€åªéœ€ä¿®æ”¹0æ¬¡å°±èƒ½åˆ°è¾¾0å·ç»“ç‚¹ï¼ˆæ ¹èŠ‚ç‚¹ï¼‰
+	       å…¶ä»–çš„dp[i][j] = inf; 
+	 è½¬ç§»ï¼šdp[i+1][son(j)] = min(dp[i+1][son(j)], dp[i][j] + Char(j, son(j)) != str[i]) 
+	       son(j)æ˜¯jç»“ç‚¹å¯è¾¾çš„å®‰å…¨å­èŠ‚ç‚¹ 
+	       Char(j, son(j)) != str[i] è¡¨ç¤ºæ¯ä¸²çš„ç¬¬i+1ä¸ªå­—ç¬¦æ˜¯å¦å’Œjåˆ°è¾¾son(j)æ‰€éœ€çš„å­—ç¬¦ç›¸åŒ
+		   å³æ¯ä¸²æ˜¯å¦éœ€è¦å†ä¿®æ”¹ä¸€ä¸ªå­—ç¬¦æ‰èƒ½åˆ°è¾¾son(j) 
 	*/
 	int dp[MAX][MAX];
 	
@@ -49,7 +49,7 @@ public:
 	//		: 3;
 	//}
 	
-	// ½«Ä£Ê½´®²åÈëTrieÊ÷ÖĞ 
+	// å°†æ¨¡å¼ä¸²æ’å…¥Trieæ ‘ä¸­ 
 	void insertTrieTree(char * dna){
 		Node * root = &tree[0];
 		int c;
@@ -64,7 +64,7 @@ public:
 		root->bad = true;
 	}
 	
-	// ÏòTrieÊ÷ÖĞÌí¼ÓÇ°×ºÖ¸Õë£¬¹¹ÔìTrieÍ¼£º¼´ÎªËùÓĞ½áµãÉèÖÃºÏÊÊµÄprevºÍbad 
+	// å‘Trieæ ‘ä¸­æ·»åŠ å‰ç¼€æŒ‡é’ˆï¼Œæ„é€ Trieå›¾ï¼šå³ä¸ºæ‰€æœ‰ç»“ç‚¹è®¾ç½®åˆé€‚çš„prevå’Œbad 
 	void buildTrieMap(){
 		queue<Node*> q;
 		Node * root = &tree[0];
@@ -99,17 +99,17 @@ public:
 		dp[0][0] = 0;
 		
 		int now = 0, pre = 1;
-		// Ä¸´®µÄÇ°i¸ö×Ö·û 
+		// æ¯ä¸²çš„å‰iä¸ªå­—ç¬¦ 
 		for(int i = 0; dna[i]; i++){
 			now ^= 1, pre ^= 1;
-			memset(dp[now], inf, sizeof dp[now]); // ¹ö¶¯Êı×é±Ø±¸ 
+			memset(dp[now], inf, sizeof dp[now]); // æ»šåŠ¨æ•°ç»„å¿…å¤‡ 
 			int c = hash[dna[i]];
-			// µ½´ï°²È«½áµãj 
+			// åˆ°è¾¾å®‰å…¨ç»“ç‚¹j 
 			for(int j = 0; j < nodeCount; j++){
-				if(dp[pre][j] == inf) continue; // Ä¸´®i²»¿É´ï½áµãj -> Ä¸´®i+1²»¿É´ïsonj 
+				if(dp[pre][j] == inf) continue; // æ¯ä¸²iä¸å¯è¾¾ç»“ç‚¹j -> æ¯ä¸²i+1ä¸å¯è¾¾sonj 
 				Node * p = &tree[j];
-				// ×îÉÙĞŞ¸Ä´ÎÊıdp[i+1][sonj] = min(dp[i][j] + (c != k));
-				// ¡°ÎÒÎªÈËÈË¡±ĞÍ¶¯¹æ 
+				// æœ€å°‘ä¿®æ”¹æ¬¡æ•°dp[i+1][sonj] = min(dp[i][j] + (c != k));
+				// â€œæˆ‘ä¸ºäººäººâ€å‹åŠ¨è§„ 
 				for(int k = 0; k < BRANCH; k++){
 					if(!p->childs[k]->bad){
 						int sonj = p->childs[k] - tree;
@@ -118,7 +118,7 @@ public:
 				}
 			}
 		}
-		// min(dp[len][j]) ¼´Îª´ğ°¸ 
+		// min(dp[len][j]) å³ä¸ºç­”æ¡ˆ 
 		int ans = inf;
 		for(int j = 0; j < nodeCount; j++){
 			ans = min(ans, dp[now][j]);

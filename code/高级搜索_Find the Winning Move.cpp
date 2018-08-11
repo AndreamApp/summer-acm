@@ -10,7 +10,7 @@ int best_i = inf, best_j = inf;
 int alphaSearch(int depth, int beta);
 int betaSearch(int depth, int alpha);
 
-// ¸ù¾İÆåÅÌÅĞ¶ÏÓÎÏ·½á¹û 
+// æ ¹æ®æ£‹ç›˜åˆ¤æ–­æ¸¸æˆç»“æœ 
 int evaluate() {
 	for(int i = 0; i < 4; i++){
 		if(chess[i][0] == 'x' && chess[i][1] == 'x' && chess[i][2] == 'x' && chess[i][3] == 'x') 
@@ -34,9 +34,9 @@ int evaluate() {
 }
 
 int alphaSearch(int depth, int beta){
-	// o ¸Õ×ßÁËÒ»²½£¬ÏÖÔÚoÊ¤ÀûÁË 
+	// o åˆšèµ°äº†ä¸€æ­¥ï¼Œç°åœ¨oèƒœåˆ©äº† 
 	if(evaluate() == -1) return -1;
-	// ÆåÅÌÒÑ¾­ÏÂÂú»¹Ã»·Ö³öÊ¤¸º 
+	// æ£‹ç›˜å·²ç»ä¸‹æ»¡è¿˜æ²¡åˆ†å‡ºèƒœè´Ÿ 
 	if(depth <= 0) return 0;
 	int best = -inf;
 	for(int i = 0; i < 4; i++){
@@ -60,9 +60,9 @@ void print(){
 }
 
 int betaSearch(int depth, int alpha){
-	// x ¸Õ×ßÁËÒ»²½£¬ÏÖÔÚxÊ¤ÀûÁË 
+	// x åˆšèµ°äº†ä¸€æ­¥ï¼Œç°åœ¨xèƒœåˆ©äº† 
 	if(evaluate() == 1) return 1;
-	// ÆåÅÌÒÑ¾­ÏÂÂú»¹Ã»·Ö³öÊ¤¸º 
+	// æ£‹ç›˜å·²ç»ä¸‹æ»¡è¿˜æ²¡åˆ†å‡ºèƒœè´Ÿ 
 	if(depth <= 0) return 0;
 	int best = inf;
 	for(int i = 0; i < 4; i++){
@@ -86,7 +86,7 @@ int solve(int depth){
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 4; j++){
 			if(chess[i][j] == '.'){
-				// x×ß(i,j)±ØÊ¤£¬¼´ÎŞÂÛoÔõÃ´×ß£¬x¶¼ÄÜ»ñÊ¤ 
+				// xèµ°(i,j)å¿…èƒœï¼Œå³æ— è®ºoæ€ä¹ˆèµ°ï¼Œxéƒ½èƒ½è·èƒœ 
 				chess[i][j] = 'x';
 				int ans = betaSearch(depth - 1, -1);
 				chess[i][j] = '.';

@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 
 /*
-Ê¹ÓÃÏß¶ÎÊ÷Ä£ÄâÌùº£±¨µÄ¹ý³Ì£¬Ìùº£±¨=Çø¼ä¸üÐÂ£¬²éÑ¯Ä³¸öÇø¼äÓÐÃ»ÓÐº£±¨=Çø¼ä²éÑ¯ 
-Ïß¶ÎÊ÷µÄÇø¼ä´æ´¢¸ÃÇø¼äÊÇ·ñ±»È«²¿¸²¸Ç(cover)£¬Ìùº£±¨ºó¸ÃÇø¼äcover=1
-»¹ÓÐÒ»¸öÎÊÌâÊÇÇø¼ä·¶Î§Ì«´ó(1<=l<=r<=10000000)£¬µ«ÆäÊµÊµ¼Êº£±¨²»³¬¹ý10000ÕÅ
-¿ÉÒÔ½øÐÐÀëÉ¢»¯Ô¤´¦Àí£¬Ñ¹ËõÇø¼ä¡£Ô¤´¦ÀíºÍÏß¶ÎÊ÷µÄÊµÏÖÊÇ¶ÀÁ¢µÄ£¬Ö»²»¹ýÊÇ¶ÔÇø¼ä½øÐÐÁËÒ»´Î×ª»»¡£ 
+ä½¿ç”¨çº¿æ®µæ ‘æ¨¡æ‹Ÿè´´æµ·æŠ¥çš„è¿‡ç¨‹ï¼Œè´´æµ·æŠ¥=åŒºé—´æ›´æ–°ï¼ŒæŸ¥è¯¢æŸä¸ªåŒºé—´æœ‰æ²¡æœ‰æµ·æŠ¥=åŒºé—´æŸ¥è¯¢ 
+çº¿æ®µæ ‘çš„åŒºé—´å­˜å‚¨è¯¥åŒºé—´æ˜¯å¦è¢«å…¨éƒ¨è¦†ç›–(cover)ï¼Œè´´æµ·æŠ¥åŽè¯¥åŒºé—´cover=1
+è¿˜æœ‰ä¸€ä¸ªé—®é¢˜æ˜¯åŒºé—´èŒƒå›´å¤ªå¤§(1<=l<=r<=10000000)ï¼Œä½†å…¶å®žå®žé™…æµ·æŠ¥ä¸è¶…è¿‡10000å¼ 
+å¯ä»¥è¿›è¡Œç¦»æ•£åŒ–é¢„å¤„ç†ï¼ŒåŽ‹ç¼©åŒºé—´ã€‚é¢„å¤„ç†å’Œçº¿æ®µæ ‘çš„å®žçŽ°æ˜¯ç‹¬ç«‹çš„ï¼Œåªä¸è¿‡æ˜¯å¯¹åŒºé—´è¿›è¡Œäº†ä¸€æ¬¡è½¬æ¢ã€‚ 
 */
 
 using namespace std;
@@ -34,8 +34,8 @@ struct node{
 };
 node tree[1000000];
 
-// + ÓÅÏÈ¼¶¸ßÓÚ <<
-// l << 1 + 1 ÆäÊµÊÇ l << (1 + 1)£¬ÊÇ´íµÄ 
+// + ä¼˜å…ˆçº§é«˜äºŽ <<
+// l << 1 + 1 å…¶å®žæ˜¯ l << (1 + 1)ï¼Œæ˜¯é”™çš„ 
 inline int L(int l){
 	return (l << 1) + 1;
 }
@@ -56,7 +56,7 @@ void up(int v){
 		tree[v].cover = 1;
 }
 
-// ½áµãv¶ÔÓ¦µÄÇø¼äÎª[l,r] 
+// ç»“ç‚¹vå¯¹åº”çš„åŒºé—´ä¸º[l,r] 
 // build(0, 0, n-1) -> long long a[n];
 void build(int v, int l, int r){
 	tree[v].l = l;
@@ -68,7 +68,7 @@ void build(int v, int l, int r){
 	}
 }
 
-// ¸ù½Úµãv¿ªÊ¼²éÕÒµÚi¸öÖµ£¬½«ÆäÉèÎªval
+// æ ¹èŠ‚ç‚¹vå¼€å§‹æŸ¥æ‰¾ç¬¬iä¸ªå€¼ï¼Œå°†å…¶è®¾ä¸ºval
 // insert(0, i, val) -> a[i] = val; 
 void insert(int v, int l, int r){
 	if(tree[v].is(l, r)){
@@ -87,24 +87,24 @@ void insert(int v, int l, int r){
 		insert(L(v), l, mid);
 		insert(R(v), mid+1, r);
 	}
-	// ×ÓÇø¼äÖµµÄ±ä»¯¿ÉÄÜÒýÆð¸ÃÇø¼äµÄ±ä»¯£¬Òò´Ë¸ù¾Ý×ÓÇø¼äµÄÖµ¸üÐÂ¸ÃÇø¼ä 
-	// Õâ¸ö¸üÐÂ±ØÐëÒª¼´Ê±Íê³É£¬²»ÄÜÑÓ³Ùµ½queryµÄÊ±ºòÔÙ×ö 
-	// ÒòÎªÕâ¸ö¸üÐÂÒªÖð²ãÏòÉÏ´«²¥¡£°Ö°ÖÇø¼ä²»¼´Ê±¸üÐÂ£¬Ò¯Ò¯Çø¼äµÄÖµ¾Í»á³ö´í 
+	// å­åŒºé—´å€¼çš„å˜åŒ–å¯èƒ½å¼•èµ·è¯¥åŒºé—´çš„å˜åŒ–ï¼Œå› æ­¤æ ¹æ®å­åŒºé—´çš„å€¼æ›´æ–°è¯¥åŒºé—´ 
+	// è¿™ä¸ªæ›´æ–°å¿…é¡»è¦å³æ—¶å®Œæˆï¼Œä¸èƒ½å»¶è¿Ÿåˆ°queryçš„æ—¶å€™å†åš 
+	// å› ä¸ºè¿™ä¸ªæ›´æ–°è¦é€å±‚å‘ä¸Šä¼ æ’­ã€‚çˆ¸çˆ¸åŒºé—´ä¸å³æ—¶æ›´æ–°ï¼Œçˆ·çˆ·åŒºé—´çš„å€¼å°±ä¼šå‡ºé”™ 
 	up(v);
 }
 
-// ×´Ì¬£º(l, r), 0<=l<=r<=n-1 
-// ×´Ì¬Öµ£º(cover) 
-// ³õÊ¼£º(tree[v].l, tree[v].r)  ÖÕÖ¹(l, r), l >= tree[v].l, r <= tree[v].r 
+// çŠ¶æ€ï¼š(l, r), 0<=l<=r<=n-1 
+// çŠ¶æ€å€¼ï¼š(cover) 
+// åˆå§‹ï¼š(tree[v].l, tree[v].r)  ç»ˆæ­¢(l, r), l >= tree[v].l, r <= tree[v].r 
 bool query(int v, int l, int r){
-	// ÖÕÖ¹×´Ì¬ 
+	// ç»ˆæ­¢çŠ¶æ€ 
 	if(tree[v].is(l, r)){
 		return tree[v].cover;
 	}
 	
-	// ÏÈÓÃ¸ÃÇø¼äµÄÖµ¸üÐÂ×ÓÇø¼äµÄÖµ£¬½«Çø¼ä¸üÐÂÊ±µÄlazyÖµÏÂ·Å 
+	// å…ˆç”¨è¯¥åŒºé—´çš„å€¼æ›´æ–°å­åŒºé—´çš„å€¼ï¼Œå°†åŒºé—´æ›´æ–°æ—¶çš„lazyå€¼ä¸‹æ”¾ 
 	down(v);
-	// ·ÖÖÎ²éÑ¯ 
+	// åˆ†æ²»æŸ¥è¯¢ 
 	int mid = tree[v].mid();
 	bool res;
 	if(r <= mid){
@@ -114,15 +114,15 @@ bool query(int v, int l, int r){
 		res = query(R(v), l, r);
 	}
 	else{
-		// ÓÃ×ÓÇø¼äµÄÖµ¸üÐÂ¸ÃÇø¼ä 
+		// ç”¨å­åŒºé—´çš„å€¼æ›´æ–°è¯¥åŒºé—´ 
 		res = query(L(v), l, mid) & query(R(v), mid+1, r);
 	}
-	// ×ÓÇø¼äÖµµÄ±ä»¯¿ÉÄÜÒýÆð¸ÃÇø¼äµÄ±ä»¯£¬Òò´Ë¸ù¾Ý×ÓÇø¼äµÄÖµ¸üÐÂ¸ÃÇø¼ä 
+	// å­åŒºé—´å€¼çš„å˜åŒ–å¯èƒ½å¼•èµ·è¯¥åŒºé—´çš„å˜åŒ–ï¼Œå› æ­¤æ ¹æ®å­åŒºé—´çš„å€¼æ›´æ–°è¯¥åŒºé—´ 
 	up(v);
 	return res;
 } 
 
-// ÓÃÓÚÇø¼äÀëÉ¢»¯ 
+// ç”¨äºŽåŒºé—´ç¦»æ•£åŒ– 
 set<int> a;
 map<int, int> fix;
 
@@ -142,7 +142,7 @@ int discretize(){
 	return i;
 }
 
-// Ïß¶ÎÊ÷£¨Çø¼äÊ÷£©¾ÍÊÇ°Ñ¶Ôn¸öÊýµÄ²Ù×÷×ª»¯Îª¶Ôlogn¸öÇø¼äµÄ²Ù×÷¡£±ÈÈçÇø¼ä²éÑ¯¡¢Çø¼ä¸üÐÂ 
+// çº¿æ®µæ ‘ï¼ˆåŒºé—´æ ‘ï¼‰å°±æ˜¯æŠŠå¯¹nä¸ªæ•°çš„æ“ä½œè½¬åŒ–ä¸ºå¯¹lognä¸ªåŒºé—´çš„æ“ä½œã€‚æ¯”å¦‚åŒºé—´æŸ¥è¯¢ã€åŒºé—´æ›´æ–° 
 int main(){
 //	freopen("in.txt", "r", stdin);
 	int t;
@@ -155,12 +155,12 @@ int main(){
 			a.insert(rr[i]); 
 		}
 		
-		// ½«Çø¼äÀëÉ¢»¯£¬°Ñ[0,10000000]Ñ¹Ëõµ½[0,40000]£¬ÔÙ¹¹½¨Ïß¶ÎÊ÷ 
+		// å°†åŒºé—´ç¦»æ•£åŒ–ï¼ŒæŠŠ[0,10000000]åŽ‹ç¼©åˆ°[0,40000]ï¼Œå†æž„å»ºçº¿æ®µæ ‘ 
 		int i = discretize();
 		build(0, 0, i + 100);
 		
 		int res = 0, l, r;
-		// µ¹×ÅÌùº£±¨£¬ÌùµÄÊ±ºòÍ¬Ê±²éÑ¯³ö[l,r]ÊÇ·ñÍêÈ«±»º£±¨¸²¸Ç 
+		// å€’ç€è´´æµ·æŠ¥ï¼Œè´´çš„æ—¶å€™åŒæ—¶æŸ¥è¯¢å‡º[l,r]æ˜¯å¦å®Œå…¨è¢«æµ·æŠ¥è¦†ç›– 
 		for(int i = n-1; i >= 0; i--){
 			l = fix[ll[i]];
 			r = fix[rr[i]];

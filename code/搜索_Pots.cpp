@@ -10,9 +10,9 @@ int A, B, C;
 bool flag[MAX][MAX];
 
 struct state{
-	int a; // A¹ŞÖĞµÄË® 
-	int b; // B¹ŞÖĞµÄË® 
-	vector<int> steps; // Â·¾¶ 
+	int a; // Aç½ä¸­çš„æ°´ 
+	int b; // Bç½ä¸­çš„æ°´ 
+	vector<int> steps; // è·¯å¾„ 
 	state(state & s, int op){
 		a = s.a;
 		b = s.b;
@@ -51,15 +51,15 @@ struct state{
 	}
 };
 /*
- ×´Ì¬£ºstate(a, b, steps), 0<=a<=A, 0<=b<=B (flagÓÃÓÚ×´Ì¬ÅĞÖØ)
- ×ªÒÆ£º(a, b, steps) -> (A, b, steps+1), a < A, flag[A][b] = 0
+ çŠ¶æ€ï¼šstate(a, b, steps), 0<=a<=A, 0<=b<=B (flagç”¨äºçŠ¶æ€åˆ¤é‡)
+ è½¬ç§»ï¼š(a, b, steps) -> (A, b, steps+1), a < A, flag[A][b] = 0
        (a, b, steps) -> (a, B, steps+2), b < B, flag[a][B] = 0
        (a, b, steps) -> (0, b, steps+3), a > 0, flag[0][b] = 0
        (a, b, steps) -> (a, 0, steps+4), b > 0, flag[a][0] = 0
-       (a, b, steps) -> (a-x, b+x, steps+5), a > 0, b < B, flag[a-x][b+x] = 0, ÆäÖĞx = min(a,B-b) 
-       (a, b, steps) -> (a+x, b-x, steps+6), b > 0, a < A, flag[a+x][b-x] = 0, ÆäÖĞx = min(b,A-a) 
- ³õÊ¼£º(0, 0, [])
- ÖÕÖ¹£º(C, b, steps) or (a, C, steps), steps¼´Îª´ğ°¸ 
+       (a, b, steps) -> (a-x, b+x, steps+5), a > 0, b < B, flag[a-x][b+x] = 0, å…¶ä¸­x = min(a,B-b) 
+       (a, b, steps) -> (a+x, b-x, steps+6), b > 0, a < A, flag[a+x][b-x] = 0, å…¶ä¸­x = min(b,A-a) 
+ åˆå§‹ï¼š(0, 0, [])
+ ç»ˆæ­¢ï¼š(C, b, steps) or (a, C, steps), stepså³ä¸ºç­”æ¡ˆ 
 */
 vector<int> res;
 bool bfs(){

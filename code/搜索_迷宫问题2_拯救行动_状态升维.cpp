@@ -24,26 +24,26 @@ struct point{
 char maze[MAX][MAX];
 bool flag[MAX][MAX];
 /*
- ×´Ì¬£ºpoint(x, y, step, kill), 0<=x<=n-1, 0<=y<=m-1, maze[x][y]='@'or'x'  (flagÒ²Ëã×´Ì¬µÄÒ»²¿·Ö£¬µ«ÊÇÊ¡ÂÔÁË)
- ×ªÒÆ£º(x, y, step, 0) -> (nx, ny, step+1, 0), maze[nx][ny] = '@'
+ çŠ¶æ€ï¼špoint(x, y, step, kill), 0<=x<=n-1, 0<=y<=m-1, maze[x][y]='@'or'x'  (flagä¹Ÿç®—çŠ¶æ€çš„ä¸€éƒ¨åˆ†ï¼Œä½†æ˜¯çœç•¥äº†)
+ è½¬ç§»ï¼š(x, y, step, 0) -> (nx, ny, step+1, 0), maze[nx][ny] = '@'
        (x, y, step, 0) -> (nx, ny, step+1, 1), maze[nx][ny] = 'x'
        (x, y, step, 1) -> (x, y, step+1, 0), maze[x][y] = 'x'
-       (nx, ny)ÊôÓÚ{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
+       (nx, ny)å±äº{(x-1, y), (x+1, y), (x, y-1), (x, y+1)}
        flag[nx][ny] = 0 
 */
 int bfs(int x, int y){
-	// ×´Ì¬Æğµã 
+	// çŠ¶æ€èµ·ç‚¹ 
 	queue<point> q;
 	q.push(point(x, y, 0, 0));
 	flag[x][y] = 1;
 	while(q.size()){
-		// ÌØÅĞ£º×´Ì¬ÖÕµã 
+		// ç‰¹åˆ¤ï¼šçŠ¶æ€ç»ˆç‚¹ 
 		point p = q.front(); q.pop();
 //		printf("visit (%d, %d), steps = %d\n", p.x, p.y, p.steps);
 		if(p.x == endx && p.y == endy){
 			return p.steps;
 		}
-		// ±éÀú¿É´ï×´Ì¬ 
+		// éå†å¯è¾¾çŠ¶æ€ 
 		if(p.kill){
 			p.steps++;
 			p.kill = 0;
@@ -57,7 +57,7 @@ int bfs(int x, int y){
 				if(nx >= 0 && nx < n && ny >= 0 && ny < m && !flag[nx][ny] && maze[nx][ny] != '#'){
 					bool kill = 0;
 					int steps = p.steps;
-					// ×´Ì¬×ªÒÆ 
+					// çŠ¶æ€è½¬ç§» 
 					if('@' == maze[nx][ny]){
 						steps++;
 					}

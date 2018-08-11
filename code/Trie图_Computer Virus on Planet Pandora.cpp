@@ -15,12 +15,12 @@ class TrieMap {
 private:
 	struct Node {
 		Node * childs[BRANCH];
-		Node * prev; // Ç°×ºÖ¸Õë 
-		int bad; // Î£ÏÕ½áµã 
+		Node * prev; // å‰ç¼€æŒ‡é’ˆ 
+		int bad; // å±é™©ç»“ç‚¹ 
 	};
 
 	Node tree[MAX]; // N * L <= 250 * 1000 = 250000
-	int nodeCount; // ³õÊ¼»¯Îª1£¬0ºÅ½áµãµ¥¶À³õÊ¼»¯ 
+	int nodeCount; // åˆå§‹åŒ–ä¸º1ï¼Œ0å·ç»“ç‚¹å•ç‹¬åˆå§‹åŒ– 
 
 public:
 	void init() {
@@ -33,7 +33,7 @@ public:
 		return c - 'A';
 	}
 
-	// ½«Ä£Ê½´®²åÈëTrieÊ÷ÖĞ 
+	// å°†æ¨¡å¼ä¸²æ’å…¥Trieæ ‘ä¸­ 
 	void insertTrieTree(char * dna) {
 		Node * root = &tree[0];
 		int c;
@@ -48,7 +48,7 @@ public:
 		root->bad = true;
 	}
 
-	// ÏòTrieÊ÷ÖĞÌí¼ÓÇ°×ºÖ¸Õë£¬¹¹ÔìTrieÍ¼£º¼´ÎªËùÓĞ½áµãÉèÖÃºÏÊÊµÄprevºÍbad 
+	// å‘Trieæ ‘ä¸­æ·»åŠ å‰ç¼€æŒ‡é’ˆï¼Œæ„é€ Trieå›¾ï¼šå³ä¸ºæ‰€æœ‰ç»“ç‚¹è®¾ç½®åˆé€‚çš„prevå’Œbad 
 	void buildTrieMap() {
 		queue<Node*> q;
 		Node * root = &tree[0];
@@ -86,11 +86,11 @@ public:
 			c = hash(dna[i]);
 			while (1) {
 				if (p->childs[c]) {
-					// ×Ó½ÚµãÕÒ²»µ½£¬È¥Ç°×ºÖ¸ÕëÕÒ 
+					// å­èŠ‚ç‚¹æ‰¾ä¸åˆ°ï¼Œå»å‰ç¼€æŒ‡é’ˆæ‰¾ 
 					//					if(p->childs[c] == tree){
 					//						p = p->prev;
 					//					}
-					// Æ¥Åäµ½Ò»¸öÎ£ÏÕ½áµã 
+					// åŒ¹é…åˆ°ä¸€ä¸ªå±é™©ç»“ç‚¹ 
 					if (p->childs[c]->bad) {
 						p = p->childs[c];
 						if(!visit[p - tree]){
@@ -99,7 +99,7 @@ public:
 						}
 						break;
 					}
-					// ×Ó½ÚµãÊÇ°²È«½áµã 
+					// å­èŠ‚ç‚¹æ˜¯å®‰å…¨ç»“ç‚¹ 
 					else {
 						p = p->childs[c];
 						break;

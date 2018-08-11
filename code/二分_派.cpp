@@ -1,6 +1,6 @@
 // http://icpcsummer.openjudge.cn/2018hw1/01/
-// ×¢ÒâÊ¹ÓÃdoubleÀàĞÍ
-// ÊäÈëÊä³ö¶ÔÓ¦%lf 
+// æ³¨æ„ä½¿ç”¨doubleç±»å‹
+// è¾“å…¥è¾“å‡ºå¯¹åº”%lf 
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
@@ -23,7 +23,7 @@ bool judge(double v){
 
 double search(double a, double b, double error){
 	while(b - a > error){
-		double m = (a + b) / 2; // ÓÃfloat¿ÉÄÜÒç³öµ¼ÖÂËÀÑ­»· 
+		double m = (a + b) / 2; // ç”¨floatå¯èƒ½æº¢å‡ºå¯¼è‡´æ­»å¾ªç¯ 
 		if(judge(m)){
 			a = m;
 		}

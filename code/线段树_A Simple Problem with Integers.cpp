@@ -6,8 +6,8 @@ const int MAX = 100005;
 
 int n, q;
 
-// + ÓÅÏÈ¼¶¸ßÓÚ <<
-// l << 1 + 1 ÆäÊµÊÇ l << (1 + 1)£¬ÊÇ´íµÄ 
+// + ä¼˜å…ˆçº§é«˜äº <<
+// l << 1 + 1 å…¶å®æ˜¯ l << (1 + 1)ï¼Œæ˜¯é”™çš„ 
 inline int L(int l){
 	return (l << 1) + 1;
 }
@@ -45,7 +45,7 @@ void sync(int v){
 	tree[v].lazy = 0;
 }
 
-// ½áµãv¶ÔÓ¦µÄÇø¼äÎª[l,r] 
+// ç»“ç‚¹vå¯¹åº”çš„åŒºé—´ä¸º[l,r] 
 // build(0, 0, n-1) -> long long a[n];
 void build(int v, int l, int r){
 	tree[v].l = l;
@@ -58,7 +58,7 @@ void build(int v, int l, int r){
 	}
 }
 
-// ¸ù½Úµãv¿ªÊ¼²éÕÒµÚi¸öÖµ£¬½«ÆäÉèÎªval
+// æ ¹èŠ‚ç‚¹vå¼€å§‹æŸ¥æ‰¾ç¬¬iä¸ªå€¼ï¼Œå°†å…¶è®¾ä¸ºval
 // insert(0, i, val) -> a[i] = val; 
 void insert(int v, int i, long long val){
 	if(tree[v].is(i, i)){
@@ -77,17 +77,17 @@ void insert(int v, int i, long long val){
 }
 
 // a[i:j] += val;
-// ¸üĞÂ¹é¸ù½áµ×Ò²»¹ÊÇ²éÑ¯
-// ¶Ôn¸öÊı½øĞĞ¸üĞÂ£¬µ«×îºóÊµ¼ÊÉÏÖ»ÊÇ¸üĞÂÁË²éÑ¯³öÀ´µÄlogn¸ö·Ö½âÇø¼ä
-// ²»¹ıÊÇ°Ñlogn¸öÇø¼ä²éÑ¯³öÀ´£¬È»ºó°ÑlazyÖµ¼ÓÉÏval 
-// ÕâÖÖlazyµÄÏë·¨ºÜ³£¼û£¬±ÈÈçĞéÄâÄÚ´æµÄlazy page fault 
+// æ›´æ–°å½’æ ¹ç»“åº•ä¹Ÿè¿˜æ˜¯æŸ¥è¯¢
+// å¯¹nä¸ªæ•°è¿›è¡Œæ›´æ–°ï¼Œä½†æœ€åå®é™…ä¸Šåªæ˜¯æ›´æ–°äº†æŸ¥è¯¢å‡ºæ¥çš„lognä¸ªåˆ†è§£åŒºé—´
+// ä¸è¿‡æ˜¯æŠŠlognä¸ªåŒºé—´æŸ¥è¯¢å‡ºæ¥ï¼Œç„¶åæŠŠlazyå€¼åŠ ä¸Šval 
+// è¿™ç§lazyçš„æƒ³æ³•å¾ˆå¸¸è§ï¼Œæ¯”å¦‚è™šæ‹Ÿå†…å­˜çš„lazy page fault 
 void add(int v, int l, int r, long long val){
 	if(tree[v].is(l, r)){ // [l, r] = [tree[v].l, tree[v].r]
 		tree[v].lazy += val;
 		return;
 	}
 	
-	tree[v].sum += val * (r-l+1); //!  [l, r] ÊÇ [tree[v].l, tree[v].r]µÄÕæ×Ó¼¯
+	tree[v].sum += val * (r-l+1); //!  [l, r] æ˜¯ [tree[v].l, tree[v].r]çš„çœŸå­é›†
 	
 	int mid = tree[v].mid();
 	if(r <= mid){
@@ -102,20 +102,20 @@ void add(int v, int l, int r, long long val){
 	}
 }
 
-// ×´Ì¬£º(l, r), 0<=l<=r<=n-1 
-// ×´Ì¬Öµ£º(sum, lazy) 
-// ³õÊ¼£º(tree[v].l, tree[v].r)  ÖÕÖ¹(l, r), l >= tree[v].l, r <= tree[v].r 
+// çŠ¶æ€ï¼š(l, r), 0<=l<=r<=n-1 
+// çŠ¶æ€å€¼ï¼š(sum, lazy) 
+// åˆå§‹ï¼š(tree[v].l, tree[v].r)  ç»ˆæ­¢(l, r), l >= tree[v].l, r <= tree[v].r 
 long long query(int v, int l, int r){
-	// ÖÕÖ¹×´Ì¬ 
+	// ç»ˆæ­¢çŠ¶æ€ 
 	if(tree[v].is(l, r)){
 		sync(v);
 		return tree[v].sum;
 	}
 	
-	// ²éÑ¯µÄÊ±ºòÔÙÍ¬²½lazy 
+	// æŸ¥è¯¢çš„æ—¶å€™å†åŒæ­¥lazy 
 	sync(v);
 	
-	// ·ÖÖÎ²éÑ¯ 
+	// åˆ†æ²»æŸ¥è¯¢ 
 	int mid = tree[v].mid();
 	if(r <= mid){
 		return query(L(v), l, r);
@@ -129,7 +129,7 @@ long long query(int v, int l, int r){
 } 
 
 
-// Ïß¶ÎÊ÷£¨Çø¼äÊ÷£©¾ÍÊÇ°Ñ¶Ôn¸öÊıµÄ²Ù×÷×ª»¯Îª¶Ôlogn¸öÇø¼äµÄ²Ù×÷¡£±ÈÈçÇø¼ä²éÑ¯¡¢Çø¼ä¸üĞÂ 
+// çº¿æ®µæ ‘ï¼ˆåŒºé—´æ ‘ï¼‰å°±æ˜¯æŠŠå¯¹nä¸ªæ•°çš„æ“ä½œè½¬åŒ–ä¸ºå¯¹lognä¸ªåŒºé—´çš„æ“ä½œã€‚æ¯”å¦‚åŒºé—´æŸ¥è¯¢ã€åŒºé—´æ›´æ–° 
 int main(){
 	freopen("in.txt", "r", stdin);
 	long long val;

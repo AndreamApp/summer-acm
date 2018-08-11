@@ -1,16 +1,16 @@
 // http://icpcsummer.openjudge.cn/2018hw1/19/
 /*
-×´Ì¬£ºdp[i][j] ±íÊ¾Ç°i¸öÊıÀïÌô´Õ³Éj±ØĞëÊ¹ÓÃµÄÓ²±Ò¼¯ºÏ(vector)£¬1<=i<=n£¬1<=j<=x£¬Çódp[n][x]
-Ìõ¼ş£ºdp[0][j] = U (0<=j<=x), UÎªÈ«¼¯ 
-·½³Ì£ºdp[i][j] = dp[i-1][j] ¡Édp[i-1][j-a[i]] ¡È{a[i]}), 1<=i<=n, 1<=j<=x (j-a[i] >= 0)
-¸´ÔÓ¶È£ºO(nx)*O(n)=O(xn^2)  ¿Õ¼ä¸´ÔÓ¶È£ºO(nx)
+çŠ¶æ€ï¼šdp[j] è¡¨ç¤ºå‰iä¸ªæ•°é‡ŒæŒ‘å‡‘æˆjçš„æ–¹æ¡ˆæ•°ï¼Œ1<=i<=nï¼Œ1<=j<=x
+æ¡ä»¶ï¼šdp[0] = 1 
+æ–¹ç¨‹ï¼šdp[j] = dp[j] + dp[j-a[i]], 1<=i<=n, x>=j>=a[i] (j-a[i] >= 0)
+å¤æ‚åº¦ï¼šO(nx)  ç©ºé—´å¤æ‚åº¦ï¼šO(x)
 
-×¢Òâ£º
-1. È·¶¨Ã¿¸öÏÂ±êµÄÈ¡Öµ·¶Î§£¬¼´Ñ­»··¶Î§ 
-2. Ã¿Ò»¸öÏÂ±ê¶¼Ó¦¸Ã>=0£¨È·¶¨×ÔÈ»¶¨ÒåÓò£© 
-3. ²»ÒªÖØ¸´¼ÆËã³õÊ¼Ìõ¼ş¡£
-   ³õÊ¼Ìõ¼şÎªi=0µÄÇé¿ö£¬¾Í´Ói=1¿ªÊ¼¼ÆËã£» 
-   ³õÊ¼Ìõ¼şÎªi=1µÄÇé¿ö£¬¾Í´Ói=2¿ªÊ¼¼ÆËã£» 
+æ³¨æ„ï¼š
+1. ç¡®å®šæ¯ä¸ªä¸‹æ ‡çš„å–å€¼èŒƒå›´ï¼Œå³å¾ªç¯èŒƒå›´ 
+2. æ¯ä¸€ä¸ªä¸‹æ ‡éƒ½åº”è¯¥>=0ï¼ˆç¡®å®šè‡ªç„¶å®šä¹‰åŸŸï¼‰ 
+3. ä¸è¦é‡å¤è®¡ç®—åˆå§‹æ¡ä»¶ã€‚
+   åˆå§‹æ¡ä»¶ä¸ºi=0çš„æƒ…å†µï¼Œå°±ä»i=1å¼€å§‹è®¡ç®—ï¼› 
+   åˆå§‹æ¡ä»¶ä¸ºi=1çš„æƒ…å†µï¼Œå°±ä»i=2å¼€å§‹è®¡ç®—ï¼› 
 */
 #include <iostream>
 #include <cstdio>
@@ -23,64 +23,42 @@ const int MAXN = 205;
 const int MAXX = 10005;
 
 int a[MAXN];
-int dp[MAXN][MAXX];
-
-void print(char * s, vector<int> & v){
-	printf("%s: ", s);
-	for(int i = 0; i < v.size(); i++){
-		printf("%d ", v[i]);
-	}
-	printf("\n");
-}
+int dp[MAXX];
+int kind[MAXX];
 
 int main(){
-	freopen("in.txt", "r", stdin);
+//	freopen("in.txt", "r", stdin);
 	int n, x;
 	scanf("%d%d", &n, &x);
 	for(int i = 1; i <= n; i++){
 		scanf("%d", &a[i]); 
 	}
-	// Ìõ¼ş£ºdp[0][j] = U (0<=j<=x), UÎªÈ«¼¯ 
-	for(int j = 0; j <= x; j++){
-		if(a[1] == j) dp[1][j].push_back(a[1]);
-		//dp[j].assign(a+1, a+n+1);
-	}
-	// ·½³Ì£ºdp[i][j] = dp[i-1][j] ¡É(dp[i-1][j-a[i]] ¡È{a[i]}), 1<=i<=n, x>=j>=1 (j-a[i] >= 0)
-	vector<int> tmp, tmp2;
-	vector<int>::iterator end;
-	tmp2.resize(n);
-	for(int i = 2; i <= n; i++){
-		for(int j = 1; j < a[i]; j++) dp[i][j] = dp[i-1][j];
-		for(int j = a[i]; j <= x; j++){ // i = 2, j = 3
-			if(dp[i-1][j].size() == 0){
-				if(can[i-1][j]){ // ²»´æÔÚ 
-					can[i][j] = 1;
-					continue;
-				}
-				if(a[i] == j){
-					dp[i][j].assign(dp[i-1][j-a[i]].begin(), dp[i-1][j-a[i]].end());
-					dp[i][j].push_back(a[i]);
-					continue;
-				}
-			}
-			tmp.assign(dp[i-1][j-a[i]].begin(), dp[i-1][j-a[i]].end());
-			tmp.push_back(a[i]);
-			end = set_intersection(dp[i-1][j].begin(), dp[i-1][j].end(), tmp.begin(), tmp.end(), tmp2.begin());
-			dp[i][j].assign(tmp2.begin(), end);
+	dp[0] = 1;
+	for(int i = 1; i <= n; i++){
+		for(int j = x; j >= a[i]; j--){
+			dp[j] = dp[j] + dp[j - a[i]];
 		}
 	}
+	vector<int> res;
 	for(int i = 1; i <= n; i++){
+		// kind[j] è¡¨ç¤ºæ²¡æœ‰ç¬¬iä¸ªæ•°å­—æ—¶ç»„æˆjçš„æ–¹æ¡ˆæ•° 
+		kind[0] = 1;
 		for(int j = 1; j <= x; j++){
-			printf("dp[%d][%d]", i, j);
-			print("", dp[i][j]);
+			if(j >= a[i])
+				kind[j] = dp[j] - kind[j - a[i]];
+			else
+				kind[j] = dp[j];
+		}
+		if(kind[x] == 0){
+			res.push_back(a[i]);
 		}
 	}
 	
-	int S = dp[n][x].size();
+	int S = res.size();
 	printf("%d\n", S);
 	for(int i = 0; i < S; i++){
 		if(i != 0) printf(" ");
-		printf("%d", dp[n][x][i]);
+		printf("%d", res[i]);
 	}
 	return 0;
 }

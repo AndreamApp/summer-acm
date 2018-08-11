@@ -32,27 +32,27 @@ int prim(int s){
 	memset(d, inf, sizeof d);
 	memset(used, 0, sizeof used);
 	d[s] = 0;
-	// ÆðÊ¼×´Ì¬ 
+	// èµ·å§‹çŠ¶æ€ 
 	Point p(s, 0);
 	priority_queue<Point> q;
 	q.push(p);
 	while(q.size()){
-		// ÕÒµ½ÏÂÒ»¸ö²»ÔÚÉú³ÉÊ÷ÖÐµÄ*×î½ü*½áµã
+		// æ‰¾åˆ°ä¸‹ä¸€ä¸ªä¸åœ¨ç”Ÿæˆæ ‘ä¸­çš„*æœ€è¿‘*ç»“ç‚¹
 		do{
 			p = q.top(); q.pop();
 		} while(used[p.v] && q.size());
 		int u = p.v;
 		if(!used[u]){ 
 			used[u] = 1;
-			totalWeight += p.dis; // ÄÇ¸ö×î½üµÄ½áµã£¬¾ÍÊÇ×îÐ¡Éú³ÉÊ÷µÄÒ»¸ö½áµã 
-			// ¼ÆËãÉú³ÉÊ÷µ½ÏàÁÚ½áµãµÄ×î¶Ì¾àÀë 
+			totalWeight += p.dis; // é‚£ä¸ªæœ€è¿‘çš„ç»“ç‚¹ï¼Œå°±æ˜¯æœ€å°ç”Ÿæˆæ ‘çš„ä¸€ä¸ªç»“ç‚¹ 
+			// è®¡ç®—ç”Ÿæˆæ ‘åˆ°ç›¸é‚»ç»“ç‚¹çš„æœ€çŸ­è·ç¦» 
 			for(int j = 0; j < G[u].size(); j++){
 				if(!used[j]){
 					int w = G[u][j].w;
 					if(d[j] > w){ 
 //						d[j] = d[u] + G[u][j];
-						d[j] = w; // DijkstraµÄd[j]±£´æÆðµãsµ½jµÄ×î¶Ì¾àÀë£¬¶øPrimµÄd[j]±£´æµÄÊÇÉú³ÉÊ÷µ½jµÄ×î¶Ì¾àÀë 
-						q.push(Point(j, d[j])); // ¸üÐÂµÄÍ¬Ê±¼ÓÈë¶ÓÁÐ£¬±£Ö¤×î½üµÄ½áµãÄÜ±»ÕÒµ½ 
+						d[j] = w; // Dijkstraçš„d[j]ä¿å­˜èµ·ç‚¹såˆ°jçš„æœ€çŸ­è·ç¦»ï¼Œè€ŒPrimçš„d[j]ä¿å­˜çš„æ˜¯ç”Ÿæˆæ ‘åˆ°jçš„æœ€çŸ­è·ç¦» 
+						q.push(Point(j, d[j])); // æ›´æ–°çš„åŒæ—¶åŠ å…¥é˜Ÿåˆ—ï¼Œä¿è¯æœ€è¿‘çš„ç»“ç‚¹èƒ½è¢«æ‰¾åˆ° 
 					}
 				}
 			}

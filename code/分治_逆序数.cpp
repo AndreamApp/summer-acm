@@ -23,10 +23,10 @@ long long inverse(int l, int r){
 	int i = l, j = m+1, k = l;
 	// now a[i,m] and a[j,r] are sorted
 	while(i <= m && j <= r){
-		if(a[i] < a[j]){ // a[i]ºÍa[j,r]²»´æÔÚÄæĞò¶Ô 
+		if(a[i] < a[j]){ // a[i]å’Œa[j,r]ä¸å­˜åœ¨é€†åºå¯¹ 
 			t[k++] = a[i++];
 		}
-		else if(a[i] > a[j]){ // a[i,m]ºÍa[j]È«ÊÇÄæĞò¶Ô£¬Ã¿¸öjÖ»´¦ÀíÒ»´Î 
+		else if(a[i] > a[j]){ // a[i,m]å’Œa[j]å…¨æ˜¯é€†åºå¯¹ï¼Œæ¯ä¸ªjåªå¤„ç†ä¸€æ¬¡ 
 			t[k++] = a[j++];
 			res += (m - i + 1);
 		}

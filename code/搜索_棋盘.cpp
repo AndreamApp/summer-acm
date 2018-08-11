@@ -14,19 +14,19 @@ int cnt;
 char maze[MAX][MAX];
 bool row[MAX];
 bool col[MAX];
-// ״̬��(r, m, maze, row, col), 0<=r<=n-1, 0<=m<=k
-// ת�ƣ�(r, m, maze, row, col) -> (r+1, m-1, maze', row', col') 
+// 状态：(r, m, maze, row, col), 0<=r<=n-1, 0<=m<=k
+// 转移：(r, m, maze, row, col) -> (r+1, m-1, maze', row', col') 
 void dfs(int top, int m){
-	if(m == 0) { // �õ�һ����: ��ǰ��maze 
+	if(m == 0) { // 得到一个解: 当前的maze 
 		cnt++;
 		return;
 	}
 	if(top == n) return;
-	// �̶�r��m��ö���ҵ���ת�Ƶ�״̬������ת�ơ�ָ�����µ�״̬��״̬�ռ��к͵�ǰ״̬���� 
+	// 固定r和m，枚举找到可转移的状态，“可转移”指的是新的状态在状态空间中和当前状态相邻 
 	for(int r = top; r < n; r++){
 		for(int i = 0; i < n; i++){
 			if(maze[r][i] == '#' && !row[r] && !col[i]) {
-				// ת�ƣ�(r, m, maze, col) -> (r+1, m-1, maze', col') 
+				// 转移：(r, m, maze, col) -> (r+1, m-1, maze', col') 
 				maze[r][i] = '*';
 				col[i] = 1;
 				dfs(r+1, m-1);

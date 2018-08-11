@@ -8,21 +8,21 @@ const int inf = 0x3f3f3f3f;
 
 struct Node{
 	Node * childs[BRANCH];
-	Node * prev; // ǰ׺ָ�� 
-	bool bad; // Σ�ս�� 
-	int level; // ���ڹ��ѵ�ʱ��dp 
+	Node * prev; // 前缀指针 
+	bool bad; // 危险结点 
+	int level; // 用于广搜的时候dp 
 };
 
 Node tree[2000]; // N * L <= 50 * 20 = 1000
-int nodeCount; // ��ʼ��Ϊ2��0�Ž���1�Ž�㵥����ʼ�� 
+int nodeCount; // 初始化为2，0号结点和1号结点单独初始化 
 
 /*
- ״̬��dp[i][j]��ʾĸ������Ϊi��ǰ׺����������ڵ�j����ȫ�ڵ㣩����Ҫ�޸ĵ����ٴ���
-       0<=i<=len(str), 1<=j<nodeCount��min(dp[len][j])���Ǵ� 
- ������dp[0][1] = 0; ��ʾĸ������Ϊ0��ǰ׺ֻ���޸�0�ξ��ܵ���1�Ž�㣨���ڵ㣩
-       ������dp[i][j] = inf; 
- ת�ƣ�dp[i+1][son(j)] = min(dp[i+1][son(j)], dp[i][j] + Char(j, son(j)) != str[i]) 
-       Char(j, son(j)) != str[i] ��ʾĸ���ĵ�i+1���ַ��Ƿ��j����son(j)������ַ���ͬ����ĸ���Ƿ���Ҫ���޸�һ���ַ����ܵ���son(j) 
+ 状态：dp[i][j]表示母串长度为i的前缀，遍历到达节点j（安全节点），需要修改的最少次数
+       0<=i<=len(str), 1<=j<nodeCount，min(dp[len][j])就是答案 
+ 条件：dp[0][1] = 0; 表示母串长度为0的前缀只需修改0次就能到达1号结点（根节点）
+       其他的dp[i][j] = inf; 
+ 转移：dp[i+1][son(j)] = min(dp[i+1][son(j)], dp[i][j] + Char(j, son(j)) != str[i]) 
+       Char(j, son(j)) != str[i] 表示母串的第i+1个字符是否和j到达son(j)所需的字符相同，即母串是否需要再修改一个字符才能到达son(j) 
 */
 int dp[200][2000];
 
@@ -34,7 +34,7 @@ inline int hash(char c){
 //	return c - 'a';
 }
 
-// ��ģʽ������Trie���� 
+// 将模式串插入Trie树中 
 void insertTrieTree(char * dna){
 	Node * root = &tree[1];
 	int c;
@@ -49,7 +49,7 @@ void insertTrieTree(char * dna){
 	root->bad = true;
 }
 
-// ��Trie��������ǰ׺ָ�룬����Trieͼ����Ϊ���н�����ú��ʵ�prev��bad 
+// 向Trie树中添加前缀指针，构造Trie图：即为所有结点设置合适的prev和bad 
 void buildTrieMap(){
 	for(int i = 0; i < BRANCH; i++){
 		tree[0].childs[i] = &tree[1];
@@ -57,27 +57,27 @@ void buildTrieMap(){
 	tree[0].prev = NULL;
 	tree[1].prev = &tree[0];
 	
-	// �������ν���ǰ׺ָ�� 
+	// 广搜依次建立前缀指针 
 	deque<Node*> q;
 	tree[1].level = 0;
 	q.push_back(&tree[1]);
 	while(q.size()){
 		Node * root = q.front(); q.pop_front();
-		// ����ÿһ���ӽڵ� 
+		// 对于每一个子节点 
 		for(int i = 0; i < BRANCH; i++){
 			Node * child = root->childs[i];
 			if(child){
-				// ���Ÿ��ڵ��ǰ׺��� 
+				// 沿着父节点的前缀结点 
 				Node * prev = root->prev;
 				while(prev){
-					if(prev->childs[i]){ // ƥ����ͬ��׺ 
+					if(prev->childs[i]){ // 匹配相同后缀 
 						child->prev = prev->childs[i];
-						if(child->prev->bad) child->bad = true; // Σ�ս�� 
+						if(child->prev->bad) child->bad = true; // 危险结点 
 						break;
 					}
 					prev = prev->prev;
 				}
-				// ������У����ϲ㵽�²㹹��ǰ׺ָ��
+				// 加入队列，从上层到下层构造前缀指针
 				q.push_back(child);
 			}
 		}
@@ -99,7 +99,7 @@ int searchPattern(char * dna){
 					if(!safe) return -1;
 				}
 				else{
-					// j����ֱ���ӽڵ� 
+					// j结点的直接子节点 
 					for(int k = 0; k < BRANCH; k++){
 						if(p->childs[k]){
 							if(!p->childs[k]->bad){
@@ -110,7 +110,7 @@ int searchPattern(char * dna){
 						}
 					}
 				}
-				// j���ǰ׺�����ӽڵ�
+				// j结点前缀结点的子节点
 				p = p->prev;
 			}
 		}
@@ -133,18 +133,18 @@ int searchPattern(char * dna){
 }
 
 /*
-��ROOT���������յ�ǰ������һ
-���ַ�ch�����������ϵ��ƶ�������ǰ��P������ͨ��ch
-���ӵĶ��ӣ���ô����P��ǰ׺ָ��ָ��Ľڵ�Q�������
-�޷��ҵ�ͨ��ch���ӵĶ��ӽڵ㣬�ٿ���Q��ǰ׺ָ�롭
-ֱ���ҵ�ͨ��ch���ӵĶ��ӣ��ټ���������
+从ROOT出发，按照当前串的下一
+个字符ch来进行在树上的移动。若当前点P不存在通过ch
+连接的儿子，那么考虑P的前缀指针指向的节点Q，如果还
+无法找到通过ch连接的儿子节点，再考虑Q的前缀指针…
+直到找到通过ch连接的儿子，再继续遍历。
 
-������������о�����ĳ����ֹ�ڵ㣬��˵��S��������
-ֹ�ڵ������ģʽ��.
+如果遍历过程中经过了某个终止节点，则说明S包含该终
+止节点代表的模式串.
 
-������������о�����ĳ������ֹ�ڵ��Σ�սڵ㣬
-����Զ϶�S����ĳ��ģʽ����Ҫ�ҳ����ĸ�������Σ��
-�ڵ��ǰ׺ָ�����ߣ�������ֹ�ڵ㼴�ɡ�
+如果遍历过程中经过了某个非终止节点的危险节点，
+则可以断定S包含某个模式串。要找出是哪个，沿着危险
+节点的前缀指针链走，碰到终止节点即可。
 */
 bool match(char * dna){
 	Node * p = &tree[1];

@@ -28,8 +28,8 @@ vector<Edge> G[MAX];
 int d[MAX];
 bool used[MAX];
 
-// ǰ�᣺��Դ·���������и�Ȩ�� 
-// ���Ϊ1����1�����е�ľ��롣��Ϊd[n] 
+// 前提：求单源路径，不能有负权边 
+// 起点为1，求1到所有点的距离。答案为d[n] 
 int dijkstra(int s){
 	for(int i = 1; i <= n; i++){
 		d[i] = s == i ? 0 : inf;
@@ -38,21 +38,21 @@ int dijkstra(int s){
 	priority_queue<Point> q;
 	q.push(p);
 	while(q.size()){
-		// �ҵ���һ������T�е�*���*���
-		// ���ȶ��б�֤����� 
+		// 找到下一个不在T中的*最近*结点
+		// 优先队列保证了最近 
 		do{
 			p = q.top(); q.pop();
 		} while(used[p.v] && q.size());
 		int u = p.v;
 		if(!used[u]) {
 			used[u] = 1;
-			// ��������id���ڣ��Ҳ���T�еĽ����� 
+			// 更新所有id相邻，且不在T中的结点距离 
 			for(int j = 0; j < G[u].size(); j++){
 				int v = G[u][j].v;
 				if(!used[v]){
 					if(d[v] > d[u] + G[u][j].w){
 						d[v] = d[u] + G[u][j].w;
-						q.push(Point(v, d[v])); // ���µ�ͬʱ������У���֤����Ľ���ܱ��ҵ� 
+						q.push(Point(v, d[v])); // 更新的同时加入队列，保证最近的结点能被找到 
 					}
 				}
 			}

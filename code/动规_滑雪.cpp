@@ -33,9 +33,9 @@ int main(){
 			dp[i][j] = 1;
 		}
 	}
-	// �����е�ӵ͵������� 
+	// 将所有点从低到高排序 
 	sort(p, p+R*C);
-	// �ӵ͵���ߵ����θ��£�����Ϊ���ˡ��Ͷ��� 
+	// 从低点向高点依次更新：“我为人人”型动规 
 	for(int m = 0; m < R*C; m++){
 		int i = p[m].i, j = p[m].j;
 		if(p[m].h < mp[i-1][j])
@@ -48,7 +48,7 @@ int main(){
 			dp[i][j+1] = max(dp[i][j+1], dp[i][j] + 1);
 	}
 	
-	// ��� max(dp[i][j]) ���� 
+	// 最后 max(dp[i][j]) 即答案 
 	int cnt = 0;
 	for(int i = 1; i <= R; i++){
 		for(int j = 1; j <= C; j++){
